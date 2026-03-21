@@ -506,7 +506,7 @@ function renderRecipes() {
   let filtered = _allRecipes.filter(r => {
     if (_filter === 'pending')  return !r.approved && !r.rejected;
     if (_filter === 'approved') return !!r.approved;
-    if (_filter === 'rejected') return !!r.rejected;
+    if (_filter === 'rejected') return !r.approved; // no rejected column — pending = not approved
     return true;
   });
 
@@ -530,7 +530,7 @@ function renderRecipes() {
 }
 
 function buildCard(r) {
-  const status = r.approved ? 'approved' : r.rejected ? 'rejected' : 'pending';
+  const status = r.approved ? 'approved' : 'pending';
   const badgeClass = { approved: 'badge-approved', rejected: 'badge-rejected', pending: 'badge-pending' }[status];
   const badgeLabel = { approved: '✅ Approved', rejected: '❌ Rejected', pending: '⏳ Pending' }[status];
 
@@ -608,9 +608,7 @@ function toggleSection(btn) {
 
 // ── MODERATE ─────────────────────────────────────────────────
 async function moderateRecipe(id, approve) {
-  const payload = approve
-    ? { approved: true,  rejected: false }
-    : { approved: false, rejected: true  };
+  const payload = { approved: !!approve };
 
   try {
     const res = await fetch(`${SUPABASE_URL}${TABLE}?id=eq.${id}`, {
