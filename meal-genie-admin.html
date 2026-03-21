@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal Genie — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0b1829;
+      --navy2:   #111f35;
+      --navy3:   #162540;
+      --green:   #1a9e6e;
+      --green2:  #0f7a56;
+      --red:     #ef4444;
+      --amber:   #f59e0b;
+      --frost:   rgba(255,255,255,0.06);
+      --frost2:  rgba(255,255,255,0.10);
+      --border:  rgba(255,255,255,0.10);
+      --border2: rgba(255,255,255,0.18);
+      --text:    #e8f4fd;
+      --text2:   #94b3cc;
+      --text3:   #4a7090;
+      --radius:  14px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── BG ── */
+    .bg-mesh {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 10% 0%, rgba(26,158,110,0.2) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 90% 20%, rgba(26,158,110,0.08) 0%, transparent 60%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(11,24,41,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo span { color: var(--green); }
+    .nav-badge {
+      background: var(--amber); color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .nav-status {
+      font-size: 0.78rem; color: var(--text3);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px rgba(26,158,110,0.6);
+    }
+
+    /* ── LAYOUT ── */
+    .app { position: relative; z-index: 1; }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: calc(100vh - 60px); padding: 24px;
+    }
+    .login-card {
+      background: var(--frost);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      width: 100%; max-width: 420px;
+      text-align: center;
+    }
+    .login-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .login-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem; font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .login-sub { font-size: 0.875rem; color: var(--text2); margin-bottom: 28px; }
+    .login-label {
+      display: block; text-align: left;
+      font-size: 0.72rem; font-weight: 600; color: var(--text3);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .login-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      padding: 11px 14px; border-radius: 10px;
+      outline: none; transition: border-color 0.2s;
+      margin-bottom: 20px;
+    }
+    .login-input:focus { border-color: var(--green); }
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      border: none; color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+      padding: 12px; border-radius: 10px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(26,158,110,0.4); }
+    .login-error {
+      margin-top: 12px; font-size: 0.82rem; color: #fca5a5;
+      min-height: 20px;
+    }
+
+    /* ── MAIN ── */
+    #mainScreen { display: none; padding: 32px 28px 80px; max-width: 1200px; margin: 0 auto; }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--frost);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800;
+      color: var(--green); line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--text2); }
+
+    /* ── FILTERS ── */
+    .filter-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      align-items: center; margin-bottom: 24px;
+    }
+    .filter-btn {
+      background: var(--frost); border: 1px solid var(--border);
+      color: var(--text2); font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; padding: 7px 16px; border-radius: 20px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(26,158,110,0.15);
+      border-color: var(--green); color: var(--green);
+    }
+    .filter-btn.red:hover, .filter-btn.red.active {
+      background: rgba(239,68,68,0.15);
+      border-color: var(--red); color: #fca5a5;
+    }
+    .search-input {
+      flex: 1; min-width: 200px;
+      background: var(--frost); border: 1px solid var(--border2);
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
+      padding: 8px 14px; border-radius: 20px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--green); }
+    .search-input::placeholder { color: var(--text3); }
+
+    /* ── RECIPE GRID ── */
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── RECIPE CARD ── */
+    .recipe-card {
+      background: var(--frost);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .recipe-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+    .recipe-card.pending { border-color: rgba(245,158,11,0.3); }
+    .recipe-card.approved { border-color: rgba(26,158,110,0.3); }
+    .recipe-card.rejected { border-color: rgba(239,68,68,0.2); opacity: 0.6; }
+
+    .card-img {
+      width: 100%; height: 180px; object-fit: cover;
+      background: var(--navy3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+    }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .card-body { padding: 16px; }
+    .card-status-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .status-badge {
+      font-size: 0.65rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .badge-pending { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+    .badge-approved { background: rgba(26,158,110,0.15); color: #6ee7b7; border: 1px solid rgba(26,158,110,0.3); }
+    .badge-rejected { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+
+    .card-date { font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .card-cuisine { font-size: 0.78rem; color: var(--text2); margin-bottom: 12px; }
+
+    /* Nutrition strip */
+    .card-nutrition {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 12px; padding: 8px 10px;
+      background: rgba(0,0,0,0.15); border-radius: 8px;
+    }
+    .nutr-item { font-size: 0.7rem; color: var(--text2); }
+    .nutr-item strong { color: var(--text); font-weight: 600; }
+
+    /* Expandable sections */
+    .card-section { margin-bottom: 10px; }
+    .card-section-toggle {
+      background: none; border: none; color: var(--text2);
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      padding: 0; transition: color 0.2s; text-align: left; width: 100%;
+    }
+    .card-section-toggle:hover { color: var(--green); }
+    .card-section-body {
+      display: none; margin-top: 8px;
+      font-size: 0.78rem; color: var(--text2); line-height: 1.6;
+    }
+    .card-section-body.open { display: block; }
+    .card-section-body ul { padding-left: 16px; }
+    .card-section-body li { margin-bottom: 3px; }
+    .card-section-body ol { padding-left: 16px; }
+
+    /* Action buttons */
+    .card-actions { display: flex; gap: 8px; margin-top: 14px; }
+    .btn-approve, .btn-reject, .btn-delete {
+      flex: 1; border: none; border-radius: 9px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+      padding: 9px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-approve {
+      background: rgba(26,158,110,0.15); color: #6ee7b7;
+      border: 1px solid rgba(26,158,110,0.3);
+    }
+    .btn-approve:hover { background: rgba(26,158,110,0.3); }
+    .btn-reject {
+      background: rgba(239,68,68,0.10); color: #fca5a5;
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.25); }
+    .btn-delete {
+      background: rgba(239,68,68,0.08); color: #fca5a5;
+      border: 1px solid rgba(239,68,68,0.2);
+      flex: 0; padding: 9px 14px;
+    }
+    .btn-delete:hover { background: rgba(239,68,68,0.25); }
+
+    /* ── EMPTY / LOADING ── */
+    .empty-state {
+      text-align: center; padding: 60px 24px; color: var(--text3);
+      grid-column: 1 / -1;
+    }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+    .loading-spinner {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 3px solid rgba(26,158,110,0.15);
+      border-top-color: var(--green);
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border2);
+      color: var(--text); padding: 10px 20px;
+      border-radius: 12px; font-size: 0.85rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      opacity: 0; transition: all 0.3s; z-index: 200;
+      white-space: nowrap; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<div class="app">
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">
+        🍽️ Meal<span>Genie</span>
+        <span class="nav-badge">ADMIN</span>
+      </div>
+      <div class="nav-status" id="navStatus" style="display:none;">
+        <div class="status-dot"></div>
+        <span>Connected to Supabase</span>
+        <span style="color:var(--border2);">·</span>
+        <span id="adminEmail" style="font-family:'DM Mono',monospace;font-size:0.72rem;"></span>
+        <button onclick="logout()" style="background:none;border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.72rem;padding:4px 12px;border-radius:6px;cursor:pointer;margin-left:8px;">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- LOGIN -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <div class="login-title">Admin Portal</div>
+      <div class="login-sub">Sign in with your Supabase admin credentials to moderate community recipes.</div>
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="loginEmail" placeholder="admin@innov8edge.com" />
+      <label class="login-label">Password</label>
+      <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" />
+      <button class="btn-login" id="loginBtn" onclick="doLogin()">Sign In →</button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+
+  <!-- MAIN ADMIN -->
+  <div id="mainScreen">
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card">
+        <div class="stat-num" id="statTotal">—</div>
+        <div class="stat-label">Total Submissions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--amber);" id="statPending">—</div>
+        <div class="stat-label">Pending Review</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statApproved">—</div>
+        <div class="stat-label">Approved & Live</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--red);" id="statRejected">—</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setFilter('pending', this)">⏳ Pending</button>
+      <button class="filter-btn" onclick="setFilter('approved', this)">✅ Approved</button>
+      <button class="filter-btn red" onclick="setFilter('rejected', this)">❌ Rejected</button>
+      <button class="filter-btn" onclick="setFilter('all', this)">All</button>
+      <input class="search-input" id="searchInput" placeholder="🔍 Search by title or cuisine…" oninput="renderRecipes()" />
+      <button class="filter-btn" onclick="loadRecipes()" style="margin-left:auto;">↻ Refresh</button>
+    </div>
+
+    <!-- Recipe grid -->
+    <div class="recipe-grid" id="recipeGrid">
+      <div class="empty-state">
+        <div class="loading-spinner"></div>
+        <p>Loading recipes…</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────
+const SUPABASE_URL     = 'https://owuzabcxptxqzeqgacwn.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93dXphYmN4cHR4cXplcWdhY3duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTkyOTcsImV4cCI6MjA4ODk5NTI5N30.eaL7WhYr9aP2fJdHHeTdTOp3w-zbt-1lMh8VmwlJ_60';
+const TABLE            = '/rest/v1/community_recipes';
+
+let _token      = null;
+let _allRecipes = [];
+let _filter     = 'pending';
+
+// ── AUTH ─────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const btn   = document.getElementById('loginBtn');
+
+  if (!email || !pass) { errEl.textContent = 'Please enter email and password.'; return; }
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  errEl.textContent = '';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.msg || 'Login failed');
+
+    _token = data.access_token;
+    document.getElementById('adminEmail').textContent = email;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display  = 'block';
+    document.getElementById('navStatus').style.display   = 'flex';
+    await loadRecipes();
+  } catch (e) {
+    errEl.textContent = e.message;
+  }
+  btn.textContent = 'Sign In →'; btn.disabled = false;
+}
+
+function logout() {
+  _token = null; _allRecipes = [];
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainScreen').style.display  = 'none';
+  document.getElementById('navStatus').style.display   = 'none';
+  document.getElementById('loginPassword').value = '';
+}
+
+// Enter key on password
+document.getElementById('loginPassword').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ── FETCH ────────────────────────────────────────────────────
+async function loadRecipes() {
+  const grid = document.getElementById('recipeGrid');
+  grid.innerHTML = '<div class="empty-state"><div class="loading-spinner"></div><p>Loading…</p></div>';
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}${TABLE}?order=submitted_at.desc&limit=200`,
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${_token}` } }
+    );
+    if (res.status === 401) { showToast('Session expired — please sign in again'); logout(); return; }
+    if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+    _allRecipes = await res.json();
+    updateStats();
+    renderRecipes();
+  } catch (e) {
+    grid.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span><p>${e.message}</p></div>`;
+  }
+}
+
+// ── STATS ────────────────────────────────────────────────────
+function updateStats() {
+  const total    = _allRecipes.length;
+  const pending  = _allRecipes.filter(r => !r.approved && !r.rejected).length;
+  const approved = _allRecipes.filter(r => r.approved).length;
+  const rejected = _allRecipes.filter(r => r.rejected).length;
+  document.getElementById('statTotal').textContent    = total;
+  document.getElementById('statPending').textContent  = pending;
+  document.getElementById('statApproved').textContent = approved;
+  document.getElementById('statRejected').textContent = rejected;
+}
+
+// ── FILTER ───────────────────────────────────────────────────
+function setFilter(f, btn) {
+  _filter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRecipes();
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function renderRecipes() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const grid  = document.getElementById('recipeGrid');
+
+  let filtered = _allRecipes.filter(r => {
+    if (_filter === 'pending')  return !r.approved && !r.rejected;
+    if (_filter === 'approved') return !!r.approved;
+    if (_filter === 'rejected') return !!r.rejected;
+    return true;
+  });
+
+  if (query) {
+    filtered = filtered.filter(r =>
+      (r.title || '').toLowerCase().includes(query) ||
+      (r.cuisine || '').toLowerCase().includes(query)
+    );
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state">
+      <span class="empty-icon">${_filter === 'pending' ? '🎉' : '📭'}</span>
+      <p>${_filter === 'pending' ? 'No pending recipes — all caught up!' : 'No recipes found.'}</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = '';
+  filtered.forEach(r => grid.appendChild(buildCard(r)));
+}
+
+function buildCard(r) {
+  const status = r.approved ? 'approved' : r.rejected ? 'rejected' : 'pending';
+  const badgeClass = { approved: 'badge-approved', rejected: 'badge-rejected', pending: 'badge-pending' }[status];
+  const badgeLabel = { approved: '✅ Approved', rejected: '❌ Rejected', pending: '⏳ Pending' }[status];
+
+  const date = r.submitted_at ? new Date(r.submitted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+  const nutri = r.nutrition || {};
+  const nutriHtml = (nutri.calories || nutri.protein) ? `
+    <div class="card-nutrition">
+      ${nutri.calories ? `<span class="nutr-item"><strong>${nutri.calories}</strong> kcal</span>` : ''}
+      ${nutri.protein  ? `<span class="nutr-item">🔵 <strong>${nutri.protein}g</strong> protein</span>` : ''}
+      ${nutri.carbs    ? `<span class="nutr-item">🟡 <strong>${nutri.carbs}g</strong> carbs</span>` : ''}
+      ${nutri.fat      ? `<span class="nutr-item">🟠 <strong>${nutri.fat}g</strong> fat</span>` : ''}
+    </div>` : '';
+
+  const ingredients = Array.isArray(r.ingredients) ? r.ingredients : [];
+  const instructions = Array.isArray(r.instructions) ? r.instructions : [];
+
+  const card = document.createElement('div');
+  card.className = `recipe-card ${status}`;
+  card.dataset.id = r.id;
+
+  card.innerHTML = `
+    <div class="card-img" id="img-${r.id}">
+      ${r.image_url
+        ? `<img src="${r.image_url}" alt="${r.title}" loading="lazy" />`
+        : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:2.5rem;">🍽️</div>`}
+    </div>
+    <div class="card-body">
+      <div class="card-status-row">
+        <span class="status-badge ${badgeClass}">${badgeLabel}</span>
+        <span class="card-date">${date}</span>
+      </div>
+      <div class="card-title">${esc(r.title || 'Untitled')}</div>
+      <div class="card-cuisine">${esc(r.cuisine || '—')}</div>
+      ${nutriHtml}
+
+      <div class="card-section">
+        <button class="card-section-toggle" onclick="toggleSection(this)">
+          📋 Ingredients (${ingredients.length})
+          <span style="margin-left:auto;opacity:0.5;">▼</span>
+        </button>
+        <div class="card-section-body">
+          <ul>${ingredients.map(i => `<li>${esc(typeof i === 'string' ? i : JSON.stringify(i))}</li>`).join('')}</ul>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <button class="card-section-toggle" onclick="toggleSection(this)">
+          📝 Instructions (${instructions.length} steps)
+          <span style="margin-left:auto;opacity:0.5;">▼</span>
+        </button>
+        <div class="card-section-body">
+          <ol>${instructions.map(s => `<li>${esc(typeof s === 'string' ? s : JSON.stringify(s))}</li>`).join('')}</ol>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        ${status !== 'approved'
+          ? `<button class="btn-approve" onclick="moderateRecipe('${r.id}', true)">✅ Approve</button>` : ''}
+        ${status !== 'rejected'
+          ? `<button class="btn-reject" onclick="moderateRecipe('${r.id}', false)">❌ Reject</button>` : ''}
+        <button class="btn-delete" onclick="deleteRecipe('${r.id}')" title="Delete permanently">🗑</button>
+      </div>
+    </div>`;
+
+  return card;
+}
+
+function toggleSection(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  const arrow = btn.querySelector('span:last-child');
+  if (arrow) arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+// ── MODERATE ─────────────────────────────────────────────────
+async function moderateRecipe(id, approve) {
+  const payload = approve
+    ? { approved: true,  rejected: false }
+    : { approved: false, rejected: true  };
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}${TABLE}?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${_token}`,
+        'Prefer':        'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('Update failed: ' + res.status);
+
+    // Update in-memory list
+    const r = _allRecipes.find(x => x.id === id);
+    if (r) { r.approved = payload.approved; r.rejected = payload.rejected; }
+
+    updateStats();
+    renderRecipes();
+    showToast(approve ? '✅ Recipe approved and now live!' : '❌ Recipe rejected');
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+async function deleteRecipe(id) {
+  if (!confirm('Permanently delete this recipe? This cannot be undone.')) return;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}${TABLE}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${_token}`
+      }
+    });
+    if (!res.ok) throw new Error('Delete failed: ' + res.status);
+
+    _allRecipes = _allRecipes.filter(r => r.id !== id);
+    updateStats();
+    renderRecipes();
+    showToast('🗑 Recipe deleted permanently');
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+// ── TOAST ────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── UTIL ─────────────────────────────────────────────────────
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
