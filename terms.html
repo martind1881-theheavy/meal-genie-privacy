@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service — Meal Genie Pro</title>
+    <title>Terms of Service – Meal Genie</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -12,161 +12,226 @@
         rel="stylesheet">
     <style>
         :root {
-            --forest: #1a4d2e;
-            --orange: #e67e22;
-            --cream: #fdfaf5;
-            --text: #2c3e50;
-            --text-muted: #7f8c8d;
+            --cream: #fdf8f2;
+            --green: #3a9e6e;
+            --green-dark: #256b49;
+            --green-light: #e8f7f0;
+            --border: #ddeee5;
+            --ink: #1e2a22;
+            --muted: #5a6b62;
+            --orange: #f0803c;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'DM Sans', sans-serif;
             background-color: var(--cream);
-            color: var(--text);
+            color: var(--ink);
             line-height: 1.6;
             margin: 0;
             padding: 0;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 60px 20px;
+        /* HEADER SECTION */
+        header {
+            background: linear-gradient(135deg, #1e4d35 0%, #256b49 60%, #3a9e6e 100%);
+            padding: 56px 24px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 60px;
+        /* Subtle Pattern Overlay */
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.05;
+            pointer-events: none;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            color: var(--forest);
+            color: #fff;
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin: 0 0 8px;
         }
 
         .last-updated {
-            color: var(--text-muted);
-            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        /* MAIN CONTAINER & CARD */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
         }
 
         .card {
             background: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
+            padding: 40px 48px;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px 0 rgba(30, 74, 53, 0.12);
+            margin-top: -28px;
+            /* Negative overlap */
+            position: relative;
         }
 
+        .badge {
+            display: inline-block;
+            background-color: var(--green);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        /* TYPOGRAPHY */
         h2 {
-            color: var(--orange);
-            font-size: 1.4rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--green-dark);
+            font-size: 1.5rem;
+            margin: 32px 0 16px;
+        }
+
+        h2:first-of-type {
             margin-top: 0;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
         }
 
         p,
         li {
             font-size: 1.05rem;
-            margin-bottom: 15px;
+            color: var(--ink);
+            margin-bottom: 16px;
         }
 
-        .ai-disclaimer {
+        ul {
+            padding-left: 20px;
+        }
+
+        .ai-warning {
             background-color: #fff9f0;
             border-left: 4px solid var(--orange);
-            padding: 20px;
+            padding: 20px 24px;
+            color: #b35900;
             font-weight: 500;
-            color: #d35400;
-            margin: 30px 0;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
         }
 
-        .footer {
+        .ai-warning strong {
+            color: #8a4500;
+        }
+
+        footer {
             text-align: center;
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: var(--text-muted);
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
             font-size: 0.9rem;
         }
 
-        .footer a {
-            color: var(--forest);
+        footer a {
+            color: var(--green);
             text-decoration: none;
             font-weight: 600;
         }
 
-        strong {
-            color: var(--forest);
+        /* FOOTER LINKS */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <header>
+        <h1>Terms of Service</h1>
+        <p class="last-updated">Last Updated: March 24, 2026</p>
+    </header>
+
     <div class="container">
-        <header>
-            <h1>Terms of Service</h1>
-            <p class="last-updated">Last Updated: March 24, 2026</p>
-        </header>
-
-        <div class="card ai-disclaimer">
-            <strong>⚠️ IMPORTANT: AI GENERATION NOTICE</strong><br>
-            Meal Genie Pro uses Artificial Intelligence (LLMs) to generate recipes and cooking advice. AI can and does
-            hallucinate, generating inaccurate measurements, incorrect cooking times, or suggesting combinations that
-            may be unsafe.
-        </div>
-
         <div class="card">
+            <div class="badge">Legal Agreement</div>
+
+            <div class="ai-warning">
+                <strong>⚠️ AI COOKING DISCLAIMER</strong><br>
+                Meal Genie Pro uses advanced Artificial Intelligence to generate culinary advice. AI "hallucinations"
+                can result in incorrect measurements or unsafe instructions. **You are responsible for verifying all
+                recipes before cooking.**
+            </div>
+
             <h2>1. Acceptance of Terms</h2>
-            <p>By accessing or using Meal Genie Pro (the "Service"), you agree to be bound by these Terms. If you do not
-                agree to these terms, do not use the service.</p>
-        </div>
+            <p>By using Meal Genie Pro (the "Service"), you agree to these Terms. This Service is operated by
+                **Innov8Edge, LLC**. If you do not agree, please discontinue use immediately.</p>
 
-        <div class="card">
-            <h2>2. User Responsibility (The "Chef's Rule")</h2>
-            <p>The Service provides culinary inspiration and suggestions. **All users are strictly responsible for
-                reviewing every generated recipe prior to preparation.** This includes:</p>
-            <ul>
-                <li>Verifying that ingredients do not contain allergens specific to the user or guests.</li>
-                <li>Ensuring cooking temperatures (especially for meats) reach safe, FDA-regulated levels.</li>
-                <li>Verifying portion sizes and nutritional estimations.</li>
-            </ul>
-        </div>
+            <h2>2. Nature of the Service</h2>
+            <p>Meal Genie is an AI-powered tool meant for entertainment and culinary inspiration. While we strive for
+                accuracy, we do not guarantee the quality, safety, or nutritional correctness of any generated content.
+            </p>
 
-        <div class="card">
-            <h2>3. License & Ownership (Community Submission)</h2>
-            <p>While you retain original authorship of the ingredients entered, any recipe you specifically "Share to
-                Community" or submit to the Community Cookbook grants **Innov8Edge, LLC** an irrevocable, perpetual,
-                worldwide, royalty-free, and fully sublicensable right to use, reproduce, modify, adapt, publish,
-                translate, create derivative works from, distribute, and commercially exploit such content in any form,
-                media, or technology now known or later developed.</p>
-            <p>This includes, without limitation, the right to include your submitted recipes in digital or printed
-                cookbooks, promotional materials, or other educational products sold by Innov8Edge, LLC without further
-                compensation or notice to you.</p>
-        </div>
+            <h2>3. License & Commercial Use (Community Cookbook)</h2>
+            <p>By using the "Share to Community" feature, you grant **Innov8Edge, LLC** an irrevocable, worldwide,
+                perpetual, royalty-free, and fully sublicensable right to use, reproduce, modify, adapt, publish, and
+                commercially exploit your submitted recipes.</p>
+            <p><strong>Cookbook Publishing:</strong> This includes the right for Innov8Edge, LLC to include your
+                submissions in digital or printed cookbooks, apps, or other paid products without further notice or
+                compensation.</p>
 
-        <div class="card">
-            <h2>4. Limitation of Liability</h2>
-            <p>Innov8Edge, LLC, its developers, and affiliates shall not be held liable for any damages—including but
-                not limited to foodborne illness, property damage (kitchen fires), or health complications—arising from
-                the use of AI-generated advice. **Use of this AI tool is at your own risk.**</p>
-        </div>
+            <h2>4. User Health & Safety</h2>
+            <p>You acknowledge that you are solely responsible for managing food allergies, sensitivities, and ensuring
+                that all meats and proteins are cooked to safe internal temperatures as defined by your local health
+                authorities (e.g., FDA guidelines).</p>
 
-        <div class="card">
-            <h2>5. Service Modifications</h2>
-            <p>We reserve the right to modify, suspend, or discontinue any part of the Service (including premium
-                features) at any time. AI models and providers (OpenAI, Anthropic, etc.) may be swapped or updated
-                periodically to maintain quality.</p>
-        </div>
+            <h2>5. Limitation of Liability</h2>
+            <p>Innov8Edge, LLC and its affiliates shall not be liable for any health complications, property damage, or
+                financial loss resulting from reliance on AI-generated content. All recipes are used at your own risk.
+            </p>
 
-        <div class="footer">
-            © 2026 Innov8Edge, LLC · <a href="index.html">Privacy Policy</a> · <a
-                href="mailto:derrick@innov8edge.sbs">Contact Support</a>
+            <h2>6. Termination</h2>
+            <p>We reserve the right to revoke access to premium features or terminate usage for any individual violating
+                our community guidelines or attempting to scrape our data.</p>
+
+            <footer>
+                <p>© 2026 Innov8Edge, LLC. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="index.html">Privacy Policy</a>
+                    <span>·</span>
+                    <a href="mailto:derrick@innov8edge.sbs">Support</a>
+                </div>
+            </footer>
         </div>
     </div>
 
