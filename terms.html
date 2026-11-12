@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service – Meal Genie</title>
+    <title>Terms of Service – Meal Genie Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -30,7 +30,7 @@
             font-family: 'DM Sans', sans-serif;
             background-color: var(--cream);
             color: var(--ink);
-            line-height: 1.6;
+            line-height: 1.65;
             margin: 0;
             padding: 0;
         }
@@ -66,27 +66,26 @@
         }
 
         .last-updated {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* MAIN CONTAINER & CARD */
         .container {
-            max-width: 800px;
+            max-width: 820px;
             margin: 0 auto;
             padding: 0 24px 60px;
         }
 
         .card {
             background: #fff;
-            padding: 40px 48px;
+            padding: 42px 48px;
             border-radius: 16px;
             box-shadow: 0 8px 40px 0 rgba(30, 74, 53, 0.12);
             margin-top: -28px;
-            /* Negative overlap */
             position: relative;
         }
 
@@ -107,8 +106,8 @@
         h2 {
             font-family: 'Playfair Display', serif;
             color: var(--green-dark);
-            font-size: 1.5rem;
-            margin: 32px 0 16px;
+            font-size: 1.45rem;
+            margin: 32px 0 14px;
         }
 
         h2:first-of-type {
@@ -117,9 +116,9 @@
 
         p,
         li {
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             color: var(--ink);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         ul {
@@ -140,6 +139,26 @@
             color: #8a4500;
         }
 
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px;
+            font-size: 0.95rem;
+        }
+
+        .pricing-table th,
+        .pricing-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-table th {
+            background: #fdf8f2;
+            color: var(--green-dark);
+            font-weight: 700;
+        }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -155,7 +174,6 @@
             font-weight: 600;
         }
 
-        /* FOOTER LINKS */
         .footer-links {
             display: flex;
             justify-content: center;
@@ -165,7 +183,7 @@
 
         @media (max-width: 600px) {
             .card {
-                padding: 32px 24px;
+                padding: 30px 20px;
             }
 
             h1 {
@@ -179,57 +197,73 @@
 
     <header>
         <h1>Terms of Service</h1>
-        <p class="last-updated">Last Updated: March 24, 2026</p>
+        <p class="last-updated">Last Updated: November 12, 2026 · Version 4.4</p>
     </header>
 
     <div class="container">
         <div class="card">
-            <div class="badge">Legal Agreement</div>
+            <div class="badge">Legal Agreement · Meal Genie Pro</div>
 
             <div class="ai-warning">
-                <strong>⚠️ AI COOKING DISCLAIMER</strong><br>
-                Meal Genie Pro uses advanced Artificial Intelligence to generate culinary advice. AI "hallucinations"
-                can result in incorrect measurements or unsafe instructions. **You are responsible for verifying all
-                recipes before cooking.**
+                <strong>⚠️ AI CULINARY &amp; MIXOLOGY DISCLAIMER</strong><br>
+                Meal Genie Pro uses advanced Artificial Intelligence to generate recipe, meal planning, and cocktail suggestions based on your ingredients. While our system includes strict culinary and safety guardrails, AI models can produce occasional inaccuracies. <strong>You are solely responsible for inspecting ingredients, verifying cooking times, checking food allergies, and cooking all meats and poultry to safe internal temperatures according to official health guidelines.</strong>
             </div>
 
             <h2>1. Acceptance of Terms</h2>
-            <p>By using Meal Genie Pro (the "Service"), you agree to these Terms. This Service is operated by
-                **Innov8Edge, LLC**. If you do not agree, please discontinue use immediately.</p>
+            <p>By installing, activating, or using the Meal Genie Pro Chrome Extension (the "Service"), you agree to be bound by these Terms of Service. This Service is operated by <strong>Innov8Edge, LLC</strong>. If you do not agree to these terms, please remove the extension and discontinue use immediately.</p>
 
-            <h2>2. Nature of the Service</h2>
-            <p>Meal Genie is an AI-powered tool meant for entertainment and culinary inspiration. While we strive for
-                accuracy, we do not guarantee the quality, safety, or nutritional correctness of any generated content.
-            </p>
+            <h2>2. Nature of the Service &amp; Free Tier</h2>
+            <p>Meal Genie Pro is designed as a productivity and inspiration tool for home cooks and culinary enthusiasts. The extension provides a <strong>free trial tier of up to two (2) recipe generation sessions</strong> without requiring credit card registration or subscription.</p>
+            <p>Following the completion of your two free generation sessions, continuous use requires upgrading to <strong>Meal Genie Pro</strong> or entering a valid subscription license.</p>
 
-            <h2>3. License & Commercial Use (Community Cookbook)</h2>
-            <p>By using the "Share to Community" feature, you grant **Innov8Edge, LLC** an irrevocable, worldwide,
-                perpetual, royalty-free, and fully sublicensable right to use, reproduce, modify, adapt, publish, and
-                commercially exploit your submitted recipes.</p>
-            <p><strong>Cookbook Publishing:</strong> This includes the right for Innov8Edge, LLC to include your
-                submissions in digital or printed cookbooks, apps, or other paid products without further notice or
-                compensation.</p>
+            <h2>3. Subscriptions &amp; Pricing</h2>
+            <p>Meal Genie Pro offers transparent subscription options:</p>
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Price</th>
+                        <th>Terms</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Monthly Pro</strong></td>
+                        <td>$4.99 / month</td>
+                        <td>Billed monthly; cancel anytime via subscription manager</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Founder Annual</strong></td>
+                        <td>$39.99 / year</td>
+                        <td>Billed annually (33% discount; $3.33/mo equivalent); includes all Pro updates</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Payments are processed securely via our licensed payment billing providers (Stripe / BrowserBill). Subscriptions renew automatically unless cancelled before the renewal date.</p>
 
-            <h2>4. User Health & Safety</h2>
-            <p>You acknowledge that you are solely responsible for managing food allergies, sensitivities, and ensuring
-                that all meats and proteins are cooked to safe internal temperatures as defined by your local health
-                authorities (e.g., FDA guidelines).</p>
+            <h2>4. Email Communications &amp; Lead Unlock</h2>
+            <p>When generating recipes, you may voluntarily enter your First Name and Email Address to unlock recipe cards and receive a direct copy of your recipe cards, nutritional estimates, and grocery checklist in your inbox.</p>
+            <p><strong>Optional Weekly Meal Plan:</strong> If you select the optional meal plan checkbox, you agree to receive our free weekly curated recipes and culinary advice. You can unsubscribe at any time using the 1-click unsubscribe link included in every email.</p>
 
-            <h2>5. Limitation of Liability</h2>
-            <p>Innov8Edge, LLC and its affiliates shall not be liable for any health complications, property damage, or
-                financial loss resulting from reliance on AI-generated content. All recipes are used at your own risk.
-            </p>
+            <h2>5. User Health, Allergens &amp; Alcohol Responsibility</h2>
+            <p><strong>Food Allergies:</strong> You are solely responsible for screening recipes for allergens, dietary restrictions, and medical considerations. Innov8Edge, LLC is not liable for allergic reactions or food-borne illnesses.</p>
+            <p><strong>Drink &amp; Mixology Mode:</strong> The cocktail and beverage suggestions provided in Drink Mode are intended strictly for adults of legal drinking age in their respective jurisdiction. Please drink responsibly and never drink and drive.</p>
 
-            <h2>6. Termination</h2>
-            <p>We reserve the right to revoke access to premium features or terminate usage for any individual violating
-                our community guidelines or attempting to scrape our data.</p>
+            <h2>6. Community Cookbook License</h2>
+            <p>If you choose to use the "Share to Community" or "Submit to Cookbook" features, you grant Innov8Edge, LLC a non-exclusive, worldwide, royalty-free license to display, publish, format, and share your submitted recipe within the Meal Genie Community Cookbook and mobile applications.</p>
+
+            <h2>7. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by applicable law, Innov8Edge, LLC and its officers, directors, and employees shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from the use of, or inability to use, this Service, or any reliance placed on recipes generated by AI.</p>
+
+            <h2>8. Modifications to Service &amp; Terms</h2>
+            <p>We reserve the right to modify these terms or update extension features at any time. Continued use of the extension after revisions are posted constitutes agreement to the updated terms.</p>
 
             <footer>
                 <p>© 2026 Innov8Edge, LLC. All rights reserved.</p>
                 <div class="footer-links">
                     <a href="index.html">Privacy Policy</a>
                     <span>·</span>
-                    <a href="mailto:derrick@innov8edge.sbs">Support</a>
+                    <a href="mailto:derrick@innov8edge.sbs">Support &amp; Inquiries</a>
                 </div>
             </footer>
         </div>
@@ -238,3 +272,4 @@
 </body>
 
 </html>
+
