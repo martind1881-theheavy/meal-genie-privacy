@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Meal Genie — Admin Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -16,6 +16,7 @@
       --green2:  #0f7a56;
       --red:     #ef4444;
       --amber:   #f59e0b;
+      --orange:  #c9622f;
       --frost:   rgba(255,255,255,0.06);
       --frost2:  rgba(255,255,255,0.10);
       --border:  rgba(255,255,255,0.10);
@@ -37,8 +38,8 @@
     .bg-mesh {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse 70% 50% at 10% 0%, rgba(26,158,110,0.2) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 90% 20%, rgba(26,158,110,0.08) 0%, transparent 60%);
+        radial-gradient(ellipse 70% 50% at 10% 0%, rgba(26,158,110,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 90% 20%, rgba(26,158,110,0.06) 0%, transparent 60%);
     }
 
     /* ── NAV ── */
@@ -52,11 +53,14 @@
     .nav-inner {
       max-width: 1200px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
-      height: 60px;
+      height: 70px;
+    }
+    .nav-left {
+      display: flex; align-items: center; gap: 16px;
     }
     .nav-logo {
       font-family: 'Syne', sans-serif;
-      font-size: 1.2rem; font-weight: 800;
+      font-size: 1.25rem; font-weight: 800;
       color: var(--text);
       display: flex; align-items: center; gap: 8px;
     }
@@ -68,8 +72,27 @@
       padding: 2px 7px; border-radius: 4px;
       letter-spacing: 0.5px;
     }
+    .nav-right {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .pwa-config {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--frost);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+    .pwa-select {
+      background: none; border: none; color: var(--text);
+      outline: none; font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; cursor: pointer;
+    }
+    .pwa-select option {
+      background: var(--navy2); color: var(--text);
+    }
     .nav-status {
-      font-size: 0.78rem; color: var(--text3);
+      font-size: 0.78rem; color: var(--text2);
       display: flex; align-items: center; gap: 8px;
     }
     .status-dot {
@@ -81,10 +104,47 @@
     /* ── LAYOUT ── */
     .app { position: relative; z-index: 1; }
 
+    /* ── BUTTONS ── */
+    .btn {
+      background: var(--frost); border: 1px solid var(--border);
+      color: var(--text2); font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; font-weight: 600; padding: 8px 16px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn:hover {
+      background: var(--frost2); border-color: var(--border2); color: var(--text);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      color: white; border: none;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px); box-shadow: 0 8px 20px rgba(26,158,110,0.4);
+    }
+    .btn-orange {
+      background: var(--orange); color: white; border: none;
+    }
+    .btn-orange:hover {
+      background: #e06d37; transform: translateY(-1px);
+    }
+    .btn-danger {
+      background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25);
+    }
+    .btn-danger:hover {
+      background: rgba(239,68,68,0.25); color: white;
+    }
+    .btn-blue {
+      background: rgba(59,130,246,0.1); color: #93c5fd; border: 1px solid rgba(59,130,246,0.25);
+    }
+    .btn-blue:hover {
+      background: rgba(59,130,246,0.25); color: white;
+    }
+
     /* ── LOGIN SCREEN ── */
-    #loginScreen {
+    #loginScreen, #recoveryScreen, #newPasswordScreen {
       display: flex; align-items: center; justify-content: center;
-      min-height: calc(100vh - 60px); padding: 24px;
+      min-height: calc(100vh - 70px); padding: 24px;
     }
     .login-card {
       background: var(--frost);
@@ -121,20 +181,51 @@
     .login-input:focus { border-color: var(--green); }
     .btn-login {
       width: 100%;
-      background: linear-gradient(135deg, var(--green), var(--green2));
-      border: none; color: #fff;
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
-      padding: 12px; border-radius: 10px; cursor: pointer;
+      background: linear-gradient(135deg, var(--green), #256b49);
+      color: white; border: none;
+      border-radius: 10px; padding: 13px;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
       transition: all 0.2s;
     }
     .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(26,158,110,0.4); }
+    .login-success {
+      color: var(--green);
+      font-size: 0.82rem;
+      margin-top: 12px;
+      line-height: 1.4;
+      display: none;
+    }
     .login-error {
       margin-top: 12px; font-size: 0.82rem; color: #fca5a5;
       min-height: 20px;
     }
 
-    /* ── MAIN ── */
+    /* ── MAIN SCREEN ── */
     #mainScreen { display: none; padding: 32px 28px 80px; max-width: 1200px; margin: 0 auto; }
+
+    /* ── TABS NAVIGATION ── */
+    .admin-tabs {
+      display: flex; gap: 8px; margin-bottom: 32px;
+      border-bottom: 1px solid var(--border); padding-bottom: 10px;
+    }
+    .admin-tab {
+      background: none; border: none; color: var(--text2);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+      padding: 10px 20px; cursor: pointer; border-radius: 8px;
+      transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+    }
+    .admin-tab:hover {
+      background: var(--frost); color: var(--text);
+    }
+    .admin-tab.active {
+      background: rgba(26,158,110,0.15); color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ── TAB PANES ── */
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
 
     /* ── STATS ── */
     .stats-row {
@@ -142,16 +233,12 @@
       gap: 16px; margin-bottom: 32px;
     }
     .stat-card {
-      background: var(--frost);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
+      background: var(--frost); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
     }
     .stat-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 2rem; font-weight: 800;
-      color: var(--green); line-height: 1;
-      margin-bottom: 4px;
+      font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+      color: var(--green); line-height: 1; margin-bottom: 4px;
     }
     .stat-label { font-size: 0.78rem; color: var(--text2); }
 
@@ -167,12 +254,10 @@
       cursor: pointer; transition: all 0.2s;
     }
     .filter-btn:hover, .filter-btn.active {
-      background: rgba(26,158,110,0.15);
-      border-color: var(--green); color: var(--green);
+      background: rgba(26,158,110,0.15); border-color: var(--green); color: var(--green);
     }
     .filter-btn.red:hover, .filter-btn.red.active {
-      background: rgba(239,68,68,0.15);
-      border-color: var(--red); color: #fca5a5;
+      background: rgba(239,68,68,0.15); border-color: var(--red); color: #fca5a5;
     }
     .search-input {
       flex: 1; min-width: 200px;
@@ -186,40 +271,32 @@
 
     /* ── RECIPE GRID ── */
     .recipe-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
 
     /* ── RECIPE CARD ── */
     .recipe-card {
-      background: var(--frost);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
+      background: var(--frost); backdrop-filter: blur(10px);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
     }
     .recipe-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+      transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.3);
     }
     .recipe-card.pending { border-color: rgba(245,158,11,0.3); }
     .recipe-card.approved { border-color: rgba(26,158,110,0.3); }
     .recipe-card.rejected { border-color: rgba(239,68,68,0.2); opacity: 0.6; }
 
     .card-img {
-      width: 100%; height: 180px; object-fit: cover;
-      background: var(--navy3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.5rem;
+      width: 100%; height: 180px; object-fit: cover; background: var(--navy3);
+      display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
     }
     .card-img img { width: 100%; height: 100%; object-fit: cover; }
 
     .card-body { padding: 16px; }
     .card-status-row {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
     }
     .status-badge {
       font-size: 0.65rem; font-weight: 700; padding: 3px 10px;
@@ -230,17 +307,12 @@
     .badge-rejected { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
 
     .card-date { font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; }
-    .card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem; font-weight: 700;
-      margin-bottom: 3px;
-    }
+    .card-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 3px; }
     .card-cuisine { font-size: 0.78rem; color: var(--text2); margin-bottom: 12px; }
 
     /* Nutrition strip */
     .card-nutrition {
-      display: flex; gap: 10px; flex-wrap: wrap;
-      margin-bottom: 12px; padding: 8px 10px;
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; padding: 8px 10px;
       background: rgba(0,0,0,0.15); border-radius: 8px;
     }
     .nutr-item { font-size: 0.7rem; color: var(--text2); }
@@ -256,65 +328,113 @@
     }
     .card-section-toggle:hover { color: var(--green); }
     .card-section-body {
-      display: none; margin-top: 8px;
-      font-size: 0.78rem; color: var(--text2); line-height: 1.6;
+      display: none; margin-top: 8px; font-size: 0.78rem; color: var(--text2); line-height: 1.6;
     }
     .card-section-body.open { display: block; }
     .card-section-body ul { padding-left: 16px; }
     .card-section-body li { margin-bottom: 3px; }
     .card-section-body ol { padding-left: 16px; }
 
-    /* Action buttons */
     .card-actions { display: flex; gap: 8px; margin-top: 14px; }
     .btn-approve, .btn-reject, .btn-delete {
       flex: 1; border: none; border-radius: 9px;
       font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
       padding: 9px; cursor: pointer; transition: all 0.2s;
     }
-    .btn-approve {
-      background: rgba(26,158,110,0.15); color: #6ee7b7;
-      border: 1px solid rgba(26,158,110,0.3);
-    }
+    .btn-approve { background: rgba(26,158,110,0.15); color: #6ee7b7; border: 1px solid rgba(26,158,110,0.3); }
     .btn-approve:hover { background: rgba(26,158,110,0.3); }
-    .btn-reject {
-      background: rgba(239,68,68,0.10); color: #fca5a5;
-      border: 1px solid rgba(239,68,68,0.2);
-    }
+    .btn-reject { background: rgba(239,68,68,0.10); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
     .btn-reject:hover { background: rgba(239,68,68,0.25); }
-    .btn-delete {
-      background: rgba(239,68,68,0.08); color: #fca5a5;
-      border: 1px solid rgba(239,68,68,0.2);
-      flex: 0; padding: 9px 14px;
-    }
+    .btn-delete { background: rgba(239,68,68,0.08); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); flex: 0; padding: 9px 14px; }
     .btn-delete:hover { background: rgba(239,68,68,0.25); }
 
-    /* ── EMPTY / LOADING ── */
-    .empty-state {
-      text-align: center; padding: 60px 24px; color: var(--text3);
-      grid-column: 1 / -1;
+    /* ── BLOG POSTS MANAGEMENT ── */
+    .blog-form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
     }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: span 2; }
+    .form-label { font-size: 0.72rem; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input, .form-select, .form-textarea {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border2);
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      padding: 10px 12px; border-radius: 8px; outline: none; transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--green); }
+    .form-textarea { resize: vertical; }
+
+    /* ── TABLES ── */
+    .table-wrap {
+      width: 100%; overflow-x: auto; background: var(--frost); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-top: 20px;
+    }
+    .admin-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .admin-table th {
+      padding: 14px 16px; border-bottom: 1px solid var(--border2);
+      font-size: 0.75rem; font-weight: 700; color: var(--text3);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .admin-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: middle; }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge { display: inline-block; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; border-radius: 12px; }
+    .badge-pro { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+    .badge-free { background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+    .badge-cat { background: rgba(26,158,110,0.1); color: #6ee7b7; border: 1px solid rgba(26,158,110,0.2); }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 16px; padding: 8px 4px;
+    }
+
+    /* ── MODALS ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(11,24,41,0.85);
+      backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 24px;
+    }
+    .modal-card {
+      background: var(--navy2); border: 1px solid var(--border2); border-radius: var(--radius);
+      width: 100%; max-width: 650px; max-height: 90vh; display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
+    .modal-header {
+      padding: 20px 24px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--navy3);
+    }
+    .modal-title { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800; }
+    .modal-close {
+      background: rgba(255,255,255,0.05); border: none; color: var(--text2);
+      width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+      font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .modal-body { padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+
+    /* DDS bar */
+    .dds-bar-wrap { background: rgba(0,0,0,0.3); border-radius: 6px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
+    .dds-bar-fill { background: var(--green); height: 100%; transition: width 0.3s; }
+
+    /* ── EMPTY / LOADING ── */
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--text3); grid-column: 1 / -1; }
     .empty-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
     .loading-spinner {
       width: 36px; height: 36px; border-radius: 50%;
-      border: 3px solid rgba(26,158,110,0.15);
-      border-top-color: var(--green);
-      animation: spin 0.7s linear infinite;
-      margin: 0 auto 12px;
+      border: 3px solid rgba(26,158,110,0.15); border-top-color: var(--green);
+      animation: spin 0.7s linear infinite; margin: 0 auto 12px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── TOAST ── */
     .toast {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%) translateY(16px);
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border2);
-      color: var(--text); padding: 10px 20px;
-      border-radius: 12px; font-size: 0.85rem;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      opacity: 0; transition: all 0.3s; z-index: 200;
-      white-space: nowrap; pointer-events: none;
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(16px);
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(20px);
+      border: 1px solid var(--border2); color: var(--text); padding: 10px 20px;
+      border-radius: 12px; font-size: 0.85rem; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      opacity: 0; transition: all 0.3s; z-index: 200; white-space: nowrap; pointer-events: none;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
@@ -327,16 +447,32 @@
   <!-- NAV -->
   <nav>
     <div class="nav-inner">
-      <div class="nav-logo">
-        🍽️ Meal<span>Genie</span>
-        <span class="nav-badge">ADMIN</span>
+      <div class="nav-left">
+        <div class="nav-logo">
+          🍽️ Meal<span>Genie</span>
+          <span class="nav-badge">ADMIN</span>
+        </div>
       </div>
-      <div class="nav-status" id="navStatus" style="display:none;">
-        <div class="status-dot"></div>
-        <span>Connected to Supabase</span>
-        <span style="color:var(--border2);">·</span>
-        <span id="adminEmail" style="font-family:'DM Mono',monospace;font-size:0.72rem;"></span>
-        <button onclick="logout()" style="background:none;border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.72rem;padding:4px 12px;border-radius:6px;cursor:pointer;margin-left:8px;">Sign Out</button>
+      
+      <div class="nav-right">
+        <!-- PWA Env Config -->
+        <div class="pwa-config">
+          <span>PWA Env:</span>
+          <select class="pwa-select" id="pwaUrlSelect" >
+            <option value="https://mealgenie-app.innov8edge.sbs">Production (Cloud)</option>
+            <option value="http://localhost:3061">Localhost (3061)</option>
+          </select>
+        </div>
+
+        <button  class="btn btn-orange" id="backupBtn" style="display:none;">📥 Backup Database</button>
+
+        <div class="nav-status" id="navStatus" style="display:none;">
+          <div class="status-dot"></div>
+          <span>Connected</span>
+          <span style="color:var(--border);">·</span>
+          <span id="adminEmail" style="font-family:'DM Mono',monospace;font-size:0.72rem;"></span>
+          <button id="signOutBtn" class="btn" style="padding: 4px 10px; font-size: 0.72rem;">Sign Out</button>
+        </div>
       </div>
     </div>
   </nav>
@@ -346,334 +482,278 @@
     <div class="login-card">
       <div class="login-icon">🔐</div>
       <div class="login-title">Admin Portal</div>
-      <div class="login-sub">Sign in with your Supabase admin credentials to moderate community recipes.</div>
+      <div class="login-sub">Sign in with your Supabase admin credentials to moderate content and manage users.</div>
       <label class="login-label">Email</label>
       <input class="login-input" type="email" id="loginEmail" placeholder="admin@innov8edge.com" />
       <label class="login-label">Password</label>
       <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" />
-      <button class="btn-login" id="loginBtn" onclick="doLogin()">Sign In →</button>
+      <div style="display:flex; justify-content:flex-end; margin-top:6px; margin-bottom:14px;">
+        <button id="forgotPasswordBtn" type="button" style="background:none; border:none; color:var(--green); font-size:0.75rem; cursor:pointer; text-decoration:underline;">Forgot password?</button>
+      </div>
+      <button class="btn-login" id="loginBtn">Sign In →</button>
       <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+
+  
+  <!-- PASSWORD RECOVERY -->
+  <div id="recoveryScreen" style="display:none;">
+    <div class="login-card">
+      <div class="login-icon">🔑</div>
+      <div class="login-title">Reset Password</div>
+      <div class="login-sub">Enter your administrator email to receive a password recovery link.</div>
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="recoveryEmail" placeholder="admin@innov8edge.sbs or martind1881@gmail.com" />
+      <button class="btn-login" id="sendRecoveryBtn" style="margin-top:14px;">Send Reset Link →</button>
+      <div class="login-success" id="recoverySuccessMsg"></div>
+      <div class="login-error" id="recoveryErrorMsg"></div>
+      <div style="margin-top:20px;">
+        <button id="backToLoginBtn" type="button" style="background:none; border:none; color:var(--text2); font-size:0.8rem; cursor:pointer; text-decoration:underline;">← Back to Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SET NEW PASSWORD (When arriving from recovery link #type=recovery) -->
+  <div id="newPasswordScreen" style="display:none;">
+    <div class="login-card">
+      <div class="login-icon">✨</div>
+      <div class="login-title">Set New Password</div>
+      <div class="login-sub">Enter your new administrator password.</div>
+      <label class="login-label">New Password</label>
+      <input class="login-input" type="password" id="newPasswordInput" placeholder="••••••••" />
+      <button class="btn-login" id="saveNewPasswordBtn" style="margin-top:14px;">Update Password →</button>
+      <div class="login-success" id="newPasswordSuccessMsg"></div>
+      <div class="login-error" id="newPasswordErrorMsg"></div>
     </div>
   </div>
 
   <!-- MAIN ADMIN -->
   <div id="mainScreen">
+    <!-- Admin Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="tabBtnCookbook" >📖 Cookbook Moderation</button>
+      <button class="admin-tab" id="tabBtnBlogs" >✍️ Blog Post Management</button>
+      <button class="admin-tab" id="tabBtnCrm" >👥 Users CRM</button>
+    </div>
 
-    <!-- Stats -->
-    <div class="stats-row" id="statsRow">
-      <div class="stat-card">
-        <div class="stat-num" id="statTotal">—</div>
-        <div class="stat-label">Total Submissions</div>
+    <!-- ── TAB 1: COOKBOOK MODERATION ── -->
+    <div id="tabCookbook" class="tab-pane active">
+      <!-- Stats -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-num" id="statTotal">—</div>
+          <div class="stat-label">Total Submissions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" style="color:var(--amber);" id="statPending">—</div>
+          <div class="stat-label">Pending Review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statApproved">—</div>
+          <div class="stat-label">Approved & Live</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" style="color:var(--red);" id="statRejected">—</div>
+          <div class="stat-label">Rejected</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--amber);" id="statPending">—</div>
-        <div class="stat-label">Pending Review</div>
+
+      <!-- Filters -->
+      <div class="filter-row">
+        <button class="filter-btn active" data-filter="pending">⏳ Pending</button>
+        <button class="filter-btn" data-filter="approved">✓ Approved</button>
+        <button class="filter-btn red" data-filter="rejected">✕ Rejected</button>
+        <button class="filter-btn" data-filter="all">All</button>
+        <input class="search-input" id="searchInput" placeholder="🔍 Search cookbook by title or cuisine..."  />
+        <button class="btn" id="refreshRecipesBtn">↻ Refresh</button>
       </div>
-      <div class="stat-card">
-        <div class="stat-num" id="statApproved">—</div>
-        <div class="stat-label">Approved & Live</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--red);" id="statRejected">—</div>
-        <div class="stat-label">Rejected</div>
+
+      <!-- Recipe grid -->
+      <div class="recipe-grid" id="recipeGrid">
+        <div class="empty-state">
+          <div class="loading-spinner"></div>
+          <p>Loading recipes...</p>
+        </div>
       </div>
     </div>
 
-    <!-- Filters -->
-    <div class="filter-row">
-      <button class="filter-btn active" onclick="setFilter('pending', this)">⏳ Pending</button>
-      <button class="filter-btn" onclick="setFilter('approved', this)">✅ Approved</button>
-      <button class="filter-btn red" onclick="setFilter('rejected', this)">❌ Rejected</button>
-      <button class="filter-btn" onclick="setFilter('all', this)">All</button>
-      <input class="search-input" id="searchInput" placeholder="🔍 Search by title or cuisine…" oninput="renderRecipes()" />
-      <button class="filter-btn" onclick="loadRecipes()" style="margin-left:auto;">↻ Refresh</button>
-    </div>
+    <!-- ── TAB 2: BLOG POST MANAGEMENT ── -->
+    <div id="tabBlogs" class="tab-pane">
+      <div class="form-card">
+        <h3 style="font-family:'Syne',sans-serif; margin-bottom: 16px;" id="blogFormTitle">Publish New Blog Post</h3>
+        
+        <div class="blog-form-grid">
+          <div class="form-group">
+            <label class="form-label">Post Title</label>
+            <input type="text" class="form-input" id="blogTitle" placeholder="e.g. 5 Chef Secrets for the Perfect Steak" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="blogCategory">
+              <option value="TECHNIQUE">TECHNIQUE</option>
+              <option value="MIXOLOGY">MIXOLOGY</option>
+              <option value="LIFESTYLE">LIFESTYLE</option>
+              <option value="NUTRITION">NUTRITION</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Read Time</label>
+            <input type="text" class="form-input" id="blogReadTime" value="5 min read" placeholder="e.g. 3 min read" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Featured Image</label>
+            <div style="display:flex; gap: 8px; align-items:center;">
+              <input type="file" id="blogImageFile" accept="image/*"  style="display:none;" />
+              <button class="btn" id="uploadBlogImageBtn" style="padding: 10px 14px;">Upload Image</button>
+              <span id="blogImagePreviewLabel" style="font-size: 0.8rem; color: var(--text2);">No image uploaded (Default will be used)</span>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">External Article URL (Optional)</label>
+            <input type="text" class="form-input" id="blogExternalUrl" placeholder="e.g. https://innov8edge.sbs/blog/my-article" />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Short Excerpt (Shows on Feed Card)</label>
+            <textarea class="form-textarea" id="blogExcerpt" rows="2" placeholder="Write a catchy 1-2 sentence hook..."></textarea>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Full Article Content (Markdown supported. Leave blank if linking external URL)</label>
+            <textarea class="form-textarea" id="blogContent" rows="6" placeholder="Write the main blog content here..."></textarea>
+          </div>
+        </div>
 
-    <!-- Recipe grid -->
-    <div class="recipe-grid" id="recipeGrid">
-      <div class="empty-state">
-        <div class="loading-spinner"></div>
-        <p>Loading recipes…</p>
+        <div style="display:flex; gap: 10px;">
+          <button class="btn btn-primary"  id="blogSubmitBtn">Publish Post</button>
+          <button class="btn"  id="blogCancelBtn" style="display:none;">Cancel Edit</button>
+        </div>
+      </div>
+
+      <!-- Blogs Table -->
+      <h3 style="font-family:'Syne',sans-serif; margin: 24px 0 12px;">Active Blog Posts</h3>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Date Published</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="blogsTableBody">
+            <tr><td colspan="4" style="text-align:center; color:var(--text3);">Loading active blog posts...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
+    <!-- ── TAB 3: USERS CRM ── -->
+    <div id="tabCrm" class="tab-pane">
+      <h3 style="font-family:'Syne',sans-serif; margin-bottom: 12px;" id="crmTitle">Registered Users Directory</h3>
+      
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Plan</th>
+              <th>Diet Score (DDS)</th>
+              <th>Utilization Summary</th>
+              <th>Wallet (Referrals)</th>
+              <th>Joined Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="crmTableBody">
+            <tr><td colspan="7" style="text-align:center; color:var(--text3);">Loading users list from SaaS API...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button class="btn" id="crmPrevBtn" >Previous</button>
+        <span id="crmPageLabel" style="font-size: 0.85rem; font-weight:600; color:var(--text2);">Page 1 of 1</span>
+        <button class="btn" id="crmNextBtn" >Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── USER PROFILE DETAIL MODAL ── -->
+<div id="profileModal" class="modal-overlay" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title">User Diet Profile & History</h2>
+        <p id="modalUserEmail" style="font-size: 0.8rem; color: var(--text2); margin-top: 4px;"></p>
+      </div>
+      <button class="modal-close" id="closeProfileModalBtn">✕</button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Quick Info Widgets -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+        <div style="padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.03); text-align: center; border: 1px solid var(--border);">
+          <span style="font-size: 0.7rem; text-transform: uppercase; color: var(--text3); font-weight: 700; display: block; margin-bottom: 4px;">Plan Level</span>
+          <strong id="modalPlanBadge" style="font-size: 1.05rem; font-weight: 800;">FREE</strong>
+        </div>
+        <div style="padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.03); text-align: center; border: 1px solid var(--border);">
+          <span style="font-size: 0.7rem; text-transform: uppercase; color: var(--text3); font-weight: 700; display: block; margin-bottom: 4px;">Generations</span>
+          <strong id="modalGenCount" style="font-size: 1.05rem; font-weight: 800;">0 meals</strong>
+        </div>
+        <div style="padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.03); text-align: center; border: 1px solid var(--border);">
+          <span style="font-size: 0.7rem; text-transform: uppercase; color: var(--text3); font-weight: 700; display: block; margin-bottom: 4px;">Meals Cooked</span>
+          <strong id="modalCookCount" style="font-size: 1.05rem; font-weight: 800;">0 meals</strong>
+        </div>
+      </div>
+
+      <!-- DDS Panel -->
+      <div style="padding: 16px 20px; border-radius: 12px; background: rgba(26, 158, 110, 0.04); border: 1px solid rgba(26, 158, 110, 0.15);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+          <h4 style="font-family:'Syne',sans-serif; font-size: 0.95rem; color:#6ee7b7; display:flex; align-items:center; gap:8px;">🥗 Weekly Diet Diversity Score (DDS)</h4>
+          <span id="modalDdsLabel" style="font-size: 1.1rem; font-weight:800; color:#6ee7b7;">0% DDS</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text2); margin-bottom: 12px;">Based on unique healthy food groups logged during the last 7 days. Targets a max score of 14 unique items.</p>
+        <div class="dds-bar-wrap">
+          <div class="dds-bar-fill" id="modalDdsBar" style="width: 0%;"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; font-size:0.8rem;">
+          <div>
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🥩 Proteins (<span id="countProteins">0</span>)</strong>
+            <span id="listProteins" style="color:var(--text2); line-height: 1.4;">None logged</span>
+          </div>
+          <div>
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🥦 Vegetables (<span id="countVegetables">0</span>)</strong>
+            <span id="listVegetables" style="color:var(--text2); line-height: 1.4;">None logged</span>
+          </div>
+          <div style="margin-top:8px;">
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🌾 Grains (<span id="countGrains">0</span>)</strong>
+            <span id="listGrains" style="color:var(--text2); line-height: 1.4;">None logged</span>
+          </div>
+          <div style="margin-top:8px;">
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🥑 Healthy Fats (<span id="countFats">0</span>)</strong>
+            <span id="listFats" style="color:var(--text2); line-height: 1.4;">None logged</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CRM History list -->
+      <div>
+        <h4 style="font-family:'Syne',sans-serif; font-size:0.95rem; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:6px;">🍳 Cooking Task Log (Last 10 entries)</h4>
+        <div style="max-height: 200px; overflow-y:auto; font-size: 0.85rem;" id="modalCookingLog">
+          <p style="color:var(--text3); text-align:center; padding:12px;">No activity logged yet.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script>
-// ── CONFIG ────────────────────────────────────────────────────
-const SUPABASE_URL     = 'https://owuzabcxptxqzeqgacwn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93dXphYmN4cHR4cXplcWdhY3duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTkyOTcsImV4cCI6MjA4ODk5NTI5N30.eaL7WhYr9aP2fJdHHeTdTOp3w-zbt-1lMh8VmwlJ_60';
-const TABLE            = '/rest/v1/community_recipes';
-
-let _token      = null;
-let _allRecipes = [];
-let _filter     = 'pending';
-
-// ── AUTH ─────────────────────────────────────────────────────
-async function doLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass  = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  const btn   = document.getElementById('loginBtn');
-
-  if (!email || !pass) { errEl.textContent = 'Please enter email and password.'; return; }
-  btn.textContent = 'Signing in…'; btn.disabled = true;
-  errEl.textContent = '';
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
-      body: JSON.stringify({ email, password: pass })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error_description || data.msg || 'Login failed');
-
-    _token = data.access_token;
-    document.getElementById('adminEmail').textContent = email;
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainScreen').style.display  = 'block';
-    document.getElementById('navStatus').style.display   = 'flex';
-    await loadRecipes();
-  } catch (e) {
-    errEl.textContent = e.message;
-  }
-  btn.textContent = 'Sign In →'; btn.disabled = false;
-}
-
-function logout() {
-  _token = null; _allRecipes = [];
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('mainScreen').style.display  = 'none';
-  document.getElementById('navStatus').style.display   = 'none';
-  document.getElementById('loginPassword').value = '';
-}
-
-// Enter key on password
-document.getElementById('loginPassword').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
-
-// ── FETCH ────────────────────────────────────────────────────
-async function loadRecipes() {
-  const grid = document.getElementById('recipeGrid');
-  grid.innerHTML = '<div class="empty-state"><div class="loading-spinner"></div><p>Loading…</p></div>';
-
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}${TABLE}?order=submitted_at.desc&limit=200`,
-      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${_token}` } }
-    );
-    if (res.status === 401) { showToast('Session expired — please sign in again'); logout(); return; }
-    if (!res.ok) throw new Error('Fetch failed: ' + res.status);
-    _allRecipes = await res.json();
-    updateStats();
-    renderRecipes();
-  } catch (e) {
-    grid.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span><p>${e.message}</p></div>`;
-  }
-}
-
-// ── STATS ────────────────────────────────────────────────────
-function updateStats() {
-  const total    = _allRecipes.length;
-  const pending  = _allRecipes.filter(r => !r.approved && !r.rejected).length;
-  const approved = _allRecipes.filter(r => r.approved).length;
-  const rejected = _allRecipes.filter(r => r.rejected).length;
-  document.getElementById('statTotal').textContent    = total;
-  document.getElementById('statPending').textContent  = pending;
-  document.getElementById('statApproved').textContent = approved;
-  document.getElementById('statRejected').textContent = rejected;
-}
-
-// ── FILTER ───────────────────────────────────────────────────
-function setFilter(f, btn) {
-  _filter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderRecipes();
-}
-
-// ── RENDER ───────────────────────────────────────────────────
-function renderRecipes() {
-  const query = document.getElementById('searchInput').value.toLowerCase().trim();
-  const grid  = document.getElementById('recipeGrid');
-
-  let filtered = _allRecipes.filter(r => {
-    if (_filter === 'pending')  return !r.approved && !r.rejected;
-    if (_filter === 'approved') return !!r.approved;
-    if (_filter === 'rejected') return !r.approved; // no rejected column — pending = not approved
-    return true;
-  });
-
-  if (query) {
-    filtered = filtered.filter(r =>
-      (r.title || '').toLowerCase().includes(query) ||
-      (r.cuisine || '').toLowerCase().includes(query)
-    );
-  }
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty-state">
-      <span class="empty-icon">${_filter === 'pending' ? '🎉' : '📭'}</span>
-      <p>${_filter === 'pending' ? 'No pending recipes — all caught up!' : 'No recipes found.'}</p>
-    </div>`;
-    return;
-  }
-
-  grid.innerHTML = '';
-  filtered.forEach(r => grid.appendChild(buildCard(r)));
-}
-
-function buildCard(r) {
-  const status = r.approved ? 'approved' : 'pending';
-  const badgeClass = { approved: 'badge-approved', rejected: 'badge-rejected', pending: 'badge-pending' }[status];
-  const badgeLabel = { approved: '✅ Approved', rejected: '❌ Rejected', pending: '⏳ Pending' }[status];
-
-  const date = r.submitted_at ? new Date(r.submitted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
-
-  const nutri = r.nutrition || {};
-  const nutriHtml = (nutri.calories || nutri.protein) ? `
-    <div class="card-nutrition">
-      ${nutri.calories ? `<span class="nutr-item"><strong>${nutri.calories}</strong> kcal</span>` : ''}
-      ${nutri.protein  ? `<span class="nutr-item">🔵 <strong>${nutri.protein}g</strong> protein</span>` : ''}
-      ${nutri.carbs    ? `<span class="nutr-item">🟡 <strong>${nutri.carbs}g</strong> carbs</span>` : ''}
-      ${nutri.fat      ? `<span class="nutr-item">🟠 <strong>${nutri.fat}g</strong> fat</span>` : ''}
-    </div>` : '';
-
-  const ingredients = Array.isArray(r.ingredients) ? r.ingredients : [];
-  const instructions = Array.isArray(r.instructions) ? r.instructions : [];
-
-  const card = document.createElement('div');
-  card.className = `recipe-card ${status}`;
-  card.dataset.id = r.id;
-
-  card.innerHTML = `
-    <div class="card-img" id="img-${r.id}">
-      ${r.image_url
-        ? `<img src="${r.image_url}" alt="${r.title}" loading="lazy" />`
-        : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:2.5rem;">🍽️</div>`}
-    </div>
-    <div class="card-body">
-      <div class="card-status-row">
-        <span class="status-badge ${badgeClass}">${badgeLabel}</span>
-        <span class="card-date">${date}</span>
-      </div>
-      <div class="card-title">${esc(r.title || 'Untitled')}</div>
-      <div class="card-cuisine">${esc(r.cuisine || '—')}</div>
-      ${nutriHtml}
-
-      <div class="card-section">
-        <button class="card-section-toggle" onclick="toggleSection(this)">
-          📋 Ingredients (${ingredients.length})
-          <span style="margin-left:auto;opacity:0.5;">▼</span>
-        </button>
-        <div class="card-section-body">
-          <ul>${ingredients.map(i => `<li>${esc(typeof i === 'string' ? i : JSON.stringify(i))}</li>`).join('')}</ul>
-        </div>
-      </div>
-
-      <div class="card-section">
-        <button class="card-section-toggle" onclick="toggleSection(this)">
-          📝 Instructions (${instructions.length} steps)
-          <span style="margin-left:auto;opacity:0.5;">▼</span>
-        </button>
-        <div class="card-section-body">
-          <ol>${instructions.map(s => `<li>${esc(typeof s === 'string' ? s : JSON.stringify(s))}</li>`).join('')}</ol>
-        </div>
-      </div>
-
-      <div class="card-actions">
-        ${status !== 'approved'
-          ? `<button class="btn-approve" onclick="moderateRecipe('${r.id}', true)">✅ Approve</button>` : ''}
-        ${status !== 'rejected'
-          ? `<button class="btn-reject" onclick="moderateRecipe('${r.id}', false)">❌ Reject</button>` : ''}
-        <button class="btn-delete" onclick="deleteRecipe('${r.id}')" title="Delete permanently">🗑</button>
-      </div>
-    </div>`;
-
-  return card;
-}
-
-function toggleSection(btn) {
-  const body = btn.nextElementSibling;
-  body.classList.toggle('open');
-  const arrow = btn.querySelector('span:last-child');
-  if (arrow) arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
-}
-
-// ── MODERATE ─────────────────────────────────────────────────
-async function moderateRecipe(id, approve) {
-  const payload = { approved: !!approve };
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}${TABLE}?id=eq.${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type':  'application/json',
-        'apikey':        SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${_token}`,
-        'Prefer':        'return=minimal'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!res.ok) throw new Error('Update failed: ' + res.status);
-
-    // Update in-memory list
-    const r = _allRecipes.find(x => x.id === id);
-    if (r) { r.approved = payload.approved; r.rejected = payload.rejected; }
-
-    updateStats();
-    renderRecipes();
-    showToast(approve ? '✅ Recipe approved and now live!' : '❌ Recipe rejected');
-  } catch (e) {
-    showToast('Error: ' + e.message);
-  }
-}
-
-async function deleteRecipe(id) {
-  if (!confirm('Permanently delete this recipe? This cannot be undone.')) return;
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}${TABLE}?id=eq.${id}`, {
-      method: 'DELETE',
-      headers: {
-        'apikey':        SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${_token}`
-      }
-    });
-    if (!res.ok) throw new Error('Delete failed: ' + res.status);
-
-    _allRecipes = _allRecipes.filter(r => r.id !== id);
-    updateStats();
-    renderRecipes();
-    showToast('🗑 Recipe deleted permanently');
-  } catch (e) {
-    showToast('Error: ' + e.message);
-  }
-}
-
-// ── TOAST ────────────────────────────────────────────────────
-let _toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ── UTIL ─────────────────────────────────────────────────────
-function esc(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-</script>
+<script src="meal-genie-admin.js"></script>
 </body>
 </html>
+
