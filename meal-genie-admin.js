@@ -1,4 +1,3 @@
-
 // ── CONFIG ────────────────────────────────────────────────────
 const SUPABASE_URL     = 'https://owuzabcxptxqzeqgacwn.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93dXphYmN4cHR4cXplcWdhY3duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTkyOTcsImV4cCI6MjA4ODk5NTI5N30.eaL7WhYr9aP2fJdHHeTdTOp3w-zbt-1lMh8VmwlJ_60';
@@ -236,7 +235,7 @@ function buildRecipeCard(r) {
       ${nutriHtml}
 
       <div class="card-section">
-        <button class="card-section-toggle" onclick="toggleSection(this)">
+        <button class="card-section-toggle" data-action="toggle-section">
           📋 Ingredients (${ingredients.length})
           <span style="margin-left:auto;opacity:0.5;">▼</span>
         </button>
@@ -246,7 +245,7 @@ function buildRecipeCard(r) {
       </div>
 
       <div class="card-section">
-        <button class="card-section-toggle" onclick="toggleSection(this)">
+        <button class="card-section-toggle" data-action="toggle-section">
           📋  Instructions (${instructions.length} steps)
           <span style="margin-left:auto;opacity:0.5;">▼</span>
         </button>
@@ -257,10 +256,10 @@ function buildRecipeCard(r) {
 
       <div class="card-actions">
         ${status !== 'approved'
-          ? `<button class="btn-approve" onclick="moderateRecipe('${r.id}', true)">✓ Approve</button>` : ''}
+          ? `<button class="btn-approve" data-action="approve" data-id="${r.id}">✓ Approve</button>` : ''}
         ${status !== 'rejected'
-          ? `<button class="btn-reject" onclick="moderateRecipe('${r.id}', false)">✕ Reject</button>` : ''}
-        <button class="btn-delete" onclick="deleteRecipe('${r.id}')" title="Delete permanently">🗑️</button>
+          ? `<button class="btn-reject" data-action="reject" data-id="${r.id}">✕ Reject</button>` : ''}
+        <button class="btn-delete" data-action="delete" data-id="${r.id}" title="Delete permanently">🗑️</button>
       </div>
     </div>`;
 
@@ -351,8 +350,8 @@ function renderBlogs() {
       <td style="color:var(--text2); font-size:13px;">${date}</td>
       <td>
         <div style="display:flex; gap:8px;">
-          <button class="btn" style="padding: 6px 12px; font-size: 0.75rem;" onclick="editBlogPost(${JSON.stringify(blog).replace(/"/g, '&quot;')})">Edit</button>
-          <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.75rem;" onclick="deleteBlogPost('${blog.id}')">Delete</button>
+          <button class="btn" style="padding: 6px 12px; font-size: 0.75rem;" data-action="edit-blog" data-id="${blog.id}">Edit</button>
+          <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.75rem;" data-action="delete-blog" data-id="${blog.id}">Delete</button>
         </div>
       </td>
     `;
@@ -600,9 +599,9 @@ function renderUsers() {
       <td style="color:var(--text2); font-size:13px;">${dateJoined}</td>
       <td>
         <div style="display:flex; gap:6px; flex-wrap:wrap; max-width:240px;">
-          <button class="btn btn-blue" style="padding: 5px 8px; font-size: 0.72rem;" onclick="nudgeUser('${user.email}')">Nudge</button>
-          <button class="btn" style="padding: 5px 8px; font-size: 0.72rem;" onclick="openProfileModal(${JSON.stringify(user).replace(/"/g, '&quot;')})">👤  Profile</button>
-          <button class="btn btn-danger" style="padding: 5px 8px; font-size: 0.72rem;" onclick="deleteUser('${user.id}', '${user.email}')">Remove</button>
+          <button class="btn btn-blue" style="padding: 5px 8px; font-size: 0.72rem;" data-action="nudge-user" data-email="${user.email}">Nudge</button>
+          <button class="btn" style="padding: 5px 8px; font-size: 0.72rem;" data-action="profile-user" data-id="${user.id}">👤 Profile</button>
+          <button class="btn btn-danger" style="padding: 5px 8px; font-size: 0.72rem;" data-action="delete-user" data-id="${user.id}" data-email="${user.email}">Remove</button>
         </div>
       </td>
     `;
@@ -846,5 +845,105 @@ function esc(str) {
 }
 
 
-document.getElementById('loginBtn')?.addEventListener('click', doLogin);
+// ── CSP COMPLIANT EVENT LISTENERS (MV3) ─────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Navigation & Config
+  document.getElementById('pwaUrlSelect')?.addEventListener('change', handlePwaUrlChange);
+  document.getElementById('backupBtn')?.addEventListener('click', backupDatabase);
+  document.getElementById('signOutBtn')?.addEventListener('click', logout);
 
+  // Login
+  document.getElementById('loginBtn')?.addEventListener('click', doLogin);
+  document.getElementById('loginPassword')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('loginEmail')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  // Admin Tabs
+  document.getElementById('tabBtnCookbook')?.addEventListener('click', () => switchAdminTab('cookbook'));
+  document.getElementById('tabBtnBlogs')?.addEventListener('click', () => switchAdminTab('blogs'));
+  document.getElementById('tabBtnCrm')?.addEventListener('click', () => switchAdminTab('crm'));
+
+  // Recipe Filters (Delegated)
+  document.querySelector('.filter-row')?.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (btn && btn.dataset.filter) {
+      setFilter(btn.dataset.filter, btn);
+    }
+  });
+
+  // Recipe Search & Refresh
+  document.getElementById('searchInput')?.addEventListener('input', renderRecipes);
+  document.getElementById('refreshRecipesBtn')?.addEventListener('click', loadRecipes);
+
+  // Recipe Grid Actions (Delegated)
+  document.getElementById('recipeGrid')?.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+    if (action === 'approve') {
+      moderateRecipe(id, true);
+    } else if (action === 'reject') {
+      moderateRecipe(id, false);
+    } else if (action === 'delete') {
+      deleteRecipe(id);
+    } else if (action === 'toggle-section') {
+      toggleSection(btn);
+    }
+  });
+
+  // Blog Management
+  document.getElementById('uploadBlogImageBtn')?.addEventListener('click', () => {
+    document.getElementById('blogImageFile')?.click();
+  });
+  document.getElementById('blogImageFile')?.addEventListener('change', handleBlogImageUpload);
+  document.getElementById('blogSubmitBtn')?.addEventListener('click', saveBlogPost);
+  document.getElementById('blogCancelBtn')?.addEventListener('click', resetBlogForm);
+
+  // Blog Table Actions (Delegated)
+  document.getElementById('blogsTableBody')?.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+    if (action === 'edit-blog') {
+      const blog = _blogPosts.find(b => b.id === id);
+      if (blog) editBlogPost(blog);
+    } else if (action === 'delete-blog') {
+      deleteBlogPost(id);
+    }
+  });
+
+  // CRM Pagination
+  document.getElementById('crmPrevBtn')?.addEventListener('click', () => changeCrmPage(-1));
+  document.getElementById('crmNextBtn')?.addEventListener('click', () => changeCrmPage(1));
+
+  // CRM Table Actions (Delegated)
+  document.getElementById('crmTableBody')?.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    if (action === 'nudge-user') {
+      nudgeUser(btn.dataset.email);
+    } else if (action === 'profile-user') {
+      const user = _allUsers.find(u => u.id === btn.dataset.id);
+      if (user) openProfileModal(user);
+    } else if (action === 'delete-user') {
+      deleteUser(btn.dataset.id, btn.dataset.email);
+    }
+  });
+
+  // Profile Modal
+  document.getElementById('closeProfileModalBtn')?.addEventListener('click', closeProfileModal);
+  document.getElementById('profileModal')?.addEventListener('click', e => {
+    if (e.target.id === 'profileModal') closeProfileModal();
+  });
+});
+
+// Also trigger immediate check if script loaded after DOMContentLoaded
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  document.getElementById('loginBtn')?.addEventListener('click', doLogin);
+}

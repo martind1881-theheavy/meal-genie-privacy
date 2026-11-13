@@ -451,20 +451,20 @@
         <!-- PWA Env Config -->
         <div class="pwa-config">
           <span>PWA Env:</span>
-          <select class="pwa-select" id="pwaUrlSelect" onchange="handlePwaUrlChange()">
+          <select class="pwa-select" id="pwaUrlSelect" >
             <option value="https://mealgenie-app.innov8edge.sbs">Production (Cloud)</option>
             <option value="http://localhost:3061">Localhost (3061)</option>
           </select>
         </div>
 
-        <button onclick="backupDatabase()" class="btn btn-orange" id="backupBtn" style="display:none;">📥 Backup Database</button>
+        <button  class="btn btn-orange" id="backupBtn" style="display:none;">📥 Backup Database</button>
 
         <div class="nav-status" id="navStatus" style="display:none;">
           <div class="status-dot"></div>
           <span>Connected</span>
           <span style="color:var(--border);">·</span>
           <span id="adminEmail" style="font-family:'DM Mono',monospace;font-size:0.72rem;"></span>
-          <button onclick="logout()" class="btn" style="padding: 4px 10px; font-size: 0.72rem;">Sign Out</button>
+          <button id="signOutBtn" class="btn" style="padding: 4px 10px; font-size: 0.72rem;">Sign Out</button>
         </div>
       </div>
     </div>
@@ -480,7 +480,7 @@
       <input class="login-input" type="email" id="loginEmail" placeholder="admin@innov8edge.com" />
       <label class="login-label">Password</label>
       <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" />
-      <button class="btn-login" id="loginBtn" onclick="doLogin()">Sign In →</button>
+      <button class="btn-login" id="loginBtn" >Sign In →</button>
       <div class="login-error" id="loginError"></div>
     </div>
   </div>
@@ -489,9 +489,9 @@
   <div id="mainScreen">
     <!-- Admin Tabs -->
     <div class="admin-tabs">
-      <button class="admin-tab active" id="tabBtnCookbook" onclick="switchAdminTab('cookbook')">📖 Cookbook Moderation</button>
-      <button class="admin-tab" id="tabBtnBlogs" onclick="switchAdminTab('blogs')">✍️ Blog Post Management</button>
-      <button class="admin-tab" id="tabBtnCrm" onclick="switchAdminTab('crm')">👥 Users CRM</button>
+      <button class="admin-tab active" id="tabBtnCookbook" >📖 Cookbook Moderation</button>
+      <button class="admin-tab" id="tabBtnBlogs" >✍️ Blog Post Management</button>
+      <button class="admin-tab" id="tabBtnCrm" >👥 Users CRM</button>
     </div>
 
     <!-- ── TAB 1: COOKBOOK MODERATION ── -->
@@ -518,12 +518,12 @@
 
       <!-- Filters -->
       <div class="filter-row">
-        <button class="filter-btn active" onclick="setFilter('pending', this)">⏳ Pending</button>
-        <button class="filter-btn" onclick="setFilter('approved', this)">✓ Approved</button>
-        <button class="filter-btn red" onclick="setFilter('rejected', this)">✕ Rejected</button>
-        <button class="filter-btn" onclick="setFilter('all', this)">All</button>
-        <input class="search-input" id="searchInput" placeholder="🔍 Search cookbook by title or cuisine..." oninput="renderRecipes()" />
-        <button class="btn" onclick="loadRecipes()">↻ Refresh</button>
+        <button class="filter-btn active" data-filter="pending">⏳ Pending</button>
+        <button class="filter-btn" data-filter="approved">✓ Approved</button>
+        <button class="filter-btn red" data-filter="rejected">✕ Rejected</button>
+        <button class="filter-btn" data-filter="all">All</button>
+        <input class="search-input" id="searchInput" placeholder="🔍 Search cookbook by title or cuisine..."  />
+        <button class="btn" id="refreshRecipesBtn">↻ Refresh</button>
       </div>
 
       <!-- Recipe grid -->
@@ -561,8 +561,8 @@
           <div class="form-group">
             <label class="form-label">Featured Image</label>
             <div style="display:flex; gap: 8px; align-items:center;">
-              <input type="file" id="blogImageFile" accept="image/*" onchange="handleBlogImageUpload(event)" style="display:none;" />
-              <button class="btn" onclick="document.getElementById('blogImageFile').click()" style="padding: 10px 14px;">Upload Image</button>
+              <input type="file" id="blogImageFile" accept="image/*"  style="display:none;" />
+              <button class="btn" id="uploadBlogImageBtn" style="padding: 10px 14px;">Upload Image</button>
               <span id="blogImagePreviewLabel" style="font-size: 0.8rem; color: var(--text2);">No image uploaded (Default will be used)</span>
             </div>
           </div>
@@ -581,8 +581,8 @@
         </div>
 
         <div style="display:flex; gap: 10px;">
-          <button class="btn btn-primary" onclick="saveBlogPost()" id="blogSubmitBtn">Publish Post</button>
-          <button class="btn" onclick="resetBlogForm()" id="blogCancelBtn" style="display:none;">Cancel Edit</button>
+          <button class="btn btn-primary"  id="blogSubmitBtn">Publish Post</button>
+          <button class="btn"  id="blogCancelBtn" style="display:none;">Cancel Edit</button>
         </div>
       </div>
 
@@ -630,9 +630,9 @@
 
       <!-- Pagination -->
       <div class="pagination">
-        <button class="btn" id="crmPrevBtn" onclick="changeCrmPage(-1)">Previous</button>
+        <button class="btn" id="crmPrevBtn" >Previous</button>
         <span id="crmPageLabel" style="font-size: 0.85rem; font-weight:600; color:var(--text2);">Page 1 of 1</span>
-        <button class="btn" id="crmNextBtn" onclick="changeCrmPage(1)">Next</button>
+        <button class="btn" id="crmNextBtn" >Next</button>
       </div>
     </div>
   </div>
@@ -646,7 +646,7 @@
         <h2 class="modal-title">User Diet Profile & History</h2>
         <p id="modalUserEmail" style="font-size: 0.8rem; color: var(--text2); margin-top: 4px;"></p>
       </div>
-      <button class="modal-close" onclick="closeProfileModal()">✕</button>
+      <button class="modal-close" id="closeProfileModalBtn">✕</button>
     </div>
     
     <div class="modal-body">
