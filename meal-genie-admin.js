@@ -144,12 +144,19 @@ async function loadRecipes() {
   }
 }
 
+
+function getRecipeStatus(r) {
+  if (r.approved) return 'approved';
+  if (r.nutrition?.moderation_status === 'rejected' || r.rejected) return 'rejected';
+  return 'pending';
+}
+
 // ── STATS ────────────────────────────────────────────────────
 function updateStats() {
   const total    = _cookbookRecipes.length;
-  const pending  = _cookbookRecipes.filter(r => !r.approved && !r.rejected).length;
-  const approved = _cookbookRecipes.filter(r => r.approved).length;
-  const rejected = _cookbookRecipes.filter(r => r.rejected).length;
+  const pending  = _cookbookRecipes.filter(r => getRecipeStatus(r) === 'pending').length;
+  const approved = _cookbookRecipes.filter(r => getRecipeStatus(r) === 'approved').length;
+  const rejected = _cookbookRecipes.filter(r => getRecipeStatus(r) === 'rejected').length;
   
   document.getElementById('statTotal').textContent    = total;
   document.getElementById('statPending').textContent  = pending;
@@ -171,9 +178,10 @@ function renderRecipes() {
   const grid  = document.getElementById('recipeGrid');
 
   let filtered = _cookbookRecipes.filter(r => {
-    if (_filter === 'pending')  return !r.approved && !r.rejected;
-    if (_filter === 'approved') return !!r.approved;
-    if (_filter === 'rejected') return !r.approved && !!r.rejected;
+    const s = getRecipeStatus(r);
+    if (_filter === 'pending')  return s === 'pending';
+    if (_filter === 'approved') return s === 'approved';
+    if (_filter === 'rejected') return s === 'rejected';
     return true;
   });
 
@@ -197,7 +205,7 @@ function renderRecipes() {
 }
 
 function buildRecipeCard(r) {
-  const status = r.approved ? 'approved' : (r.rejected ? 'rejected' : 'pending');
+  const status = getRecipeStatus(r);
   const badgeClass = { approved: 'badge-approved', rejected: 'badge-rejected', pending: 'badge-pending' }[status];
   const badgeLabel = { approved: '✓ Approved', rejected: '✕ Rejected', pending: '⏳ Pending' }[status];
 
@@ -275,8 +283,14 @@ function toggleSection(btn) {
 
 // ── COOKBOOK MODERATION API CALLS ─────────────────────────────
 async function moderateRecipe(id, approve) {
-  // If approving, approved=true, rejected=false. If rejecting, approved=false, rejected=true.
-  const payload = { approved: !!approve, rejected: !approve };
+  const r = _cookbookRecipes.find(x => x.id == id);
+  const currentNutrition = (r && typeof r.nutrition === 'object' && r.nutrition !== null) ? { ...r.nutrition } : {};
+  currentNutrition.moderation_status = approve ? 'approved' : 'rejected';
+
+  const payload = {
+    approved: !!approve,
+    nutrition: currentNutrition
+  };
 
   try {
     const res = await fetch(`${SUPABASE_URL}${TABLE}?id=eq.${id}`, {
@@ -293,8 +307,11 @@ async function moderateRecipe(id, approve) {
     if (!res.ok) throw new Error('Update failed: ' + res.status);
 
     // Update local state
-    const r = _cookbookRecipes.find(x => x.id == id);
-    if (r) { r.approved = payload.approved; r.rejected = payload.rejected; }
+    if (r) {
+      r.approved = payload.approved;
+      r.nutrition = currentNutrition;
+      r.rejected = !approve;
+    }
 
     updateStats();
     renderRecipes();
