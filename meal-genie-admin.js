@@ -845,6 +845,136 @@ function esc(str) {
 }
 
 
+
+// ── PASSWORD RECOVERY ────────────────────────────────────────
+let _recoveryToken = null;
+
+function showRecoveryScreen() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('recoveryScreen').style.display = 'flex';
+  const emailVal = document.getElementById('loginEmail')?.value.trim();
+  if (emailVal) {
+    document.getElementById('recoveryEmail').value = emailVal;
+  }
+  const succ = document.getElementById('recoverySuccessMsg');
+  const err = document.getElementById('recoveryErrorMsg');
+  if (succ) { succ.style.display = 'none'; succ.textContent = ''; }
+  if (err) { err.textContent = ''; }
+}
+
+function hideRecoveryScreen() {
+  document.getElementById('recoveryScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+async function sendPasswordRecovery() {
+  const emailInput = document.getElementById('recoveryEmail');
+  const succ = document.getElementById('recoverySuccessMsg');
+  const err = document.getElementById('recoveryErrorMsg');
+  const btn = document.getElementById('sendRecoveryBtn');
+
+  const email = emailInput?.value.trim();
+  if (!email) {
+    err.textContent = 'Please enter your administrator email address.';
+    return;
+  }
+
+  err.textContent = '';
+  succ.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok) {
+      succ.textContent = 'Password reset link sent! Please check your email inbox and follow the instructions.';
+      succ.style.display = 'block';
+    } else {
+      if (data.error_code === 'email_address_invalid') {
+        err.innerHTML = 'Delivery to this top-level domain is restricted by Supabase mailer. Please try your linked administrator Gmail (<strong>martind1881@gmail.com</strong>).';
+      } else {
+        err.textContent = data.msg || data.error_description || 'Failed to send recovery email.';
+      }
+    }
+  } catch (e) {
+    err.textContent = 'Network error: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send Reset Link →';
+  }
+}
+
+async function saveNewPassword() {
+  const passInput = document.getElementById('newPasswordInput');
+  const succ = document.getElementById('newPasswordSuccessMsg');
+  const err = document.getElementById('newPasswordErrorMsg');
+  const btn = document.getElementById('saveNewPasswordBtn');
+
+  const newPass = passInput?.value;
+  if (!newPass || newPass.length < 6) {
+    err.textContent = 'Password must be at least 6 characters.';
+    return;
+  }
+
+  err.textContent = '';
+  succ.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Updating...';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + _recoveryToken
+      },
+      body: JSON.stringify({ password: newPass })
+    });
+
+    if (res.ok) {
+      succ.textContent = 'Password updated successfully! Redirecting to sign in...';
+      succ.style.display = 'block';
+      setTimeout(() => {
+        window.location.hash = '';
+        document.getElementById('newPasswordScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'flex';
+      }, 2000);
+    } else {
+      const data = await res.json().catch(() => ({}));
+      err.textContent = data.msg || data.error_description || 'Failed to update password.';
+    }
+  } catch (e) {
+    err.textContent = 'Network error: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Update Password →';
+  }
+}
+
+function checkHashForRecovery() {
+  const hash = window.location.hash.substring(1);
+  if (!hash) return;
+  const params = new URLSearchParams(hash);
+  if (params.get('type') === 'recovery' && params.get('access_token')) {
+    _recoveryToken = params.get('access_token');
+    document.getElementById('loginScreen').style.display = 'none';
+    const rec = document.getElementById('recoveryScreen');
+    if (rec) rec.style.display = 'none';
+    document.getElementById('newPasswordScreen').style.display = 'flex';
+  }
+}
+
 // ── CSP COMPLIANT EVENT LISTENERS (MV3) ─────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   // Navigation & Config
@@ -854,6 +984,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Login
   document.getElementById('loginBtn')?.addEventListener('click', doLogin);
+  // Password Recovery Handlers
+  document.getElementById('forgotPasswordBtn')?.addEventListener('click', showRecoveryScreen);
+  document.getElementById('backToLoginBtn')?.addEventListener('click', hideRecoveryScreen);
+  document.getElementById('sendRecoveryBtn')?.addEventListener('click', sendPasswordRecovery);
+  document.getElementById('recoveryEmail')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendPasswordRecovery();
+  });
+  document.getElementById('saveNewPasswordBtn')?.addEventListener('click', saveNewPassword);
+  document.getElementById('newPasswordInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') saveNewPassword();
+  });
+
+  // Check URL hash for recovery token
+  checkHashForRecovery();
+
   document.getElementById('loginPassword')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') doLogin();
   });

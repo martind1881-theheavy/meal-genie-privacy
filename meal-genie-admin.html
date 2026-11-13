@@ -142,7 +142,7 @@
     }
 
     /* ── LOGIN SCREEN ── */
-    #loginScreen {
+    #loginScreen, #recoveryScreen, #newPasswordScreen {
       display: flex; align-items: center; justify-content: center;
       min-height: calc(100vh - 70px); padding: 24px;
     }
@@ -189,6 +189,13 @@
       transition: all 0.2s;
     }
     .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(26,158,110,0.4); }
+    .login-success {
+      color: var(--green);
+      font-size: 0.82rem;
+      margin-top: 12px;
+      line-height: 1.4;
+      display: none;
+    }
     .login-error {
       margin-top: 12px; font-size: 0.82rem; color: #fca5a5;
       min-height: 20px;
@@ -480,8 +487,43 @@
       <input class="login-input" type="email" id="loginEmail" placeholder="admin@innov8edge.com" />
       <label class="login-label">Password</label>
       <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" />
-      <button class="btn-login" id="loginBtn" >Sign In →</button>
+      <div style="display:flex; justify-content:flex-end; margin-top:6px; margin-bottom:14px;">
+        <button id="forgotPasswordBtn" type="button" style="background:none; border:none; color:var(--green); font-size:0.75rem; cursor:pointer; text-decoration:underline;">Forgot password?</button>
+      </div>
+      <button class="btn-login" id="loginBtn">Sign In →</button>
       <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+
+  
+  <!-- PASSWORD RECOVERY -->
+  <div id="recoveryScreen" style="display:none;">
+    <div class="login-card">
+      <div class="login-icon">🔑</div>
+      <div class="login-title">Reset Password</div>
+      <div class="login-sub">Enter your administrator email to receive a password recovery link.</div>
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="recoveryEmail" placeholder="admin@innov8edge.sbs or martind1881@gmail.com" />
+      <button class="btn-login" id="sendRecoveryBtn" style="margin-top:14px;">Send Reset Link →</button>
+      <div class="login-success" id="recoverySuccessMsg"></div>
+      <div class="login-error" id="recoveryErrorMsg"></div>
+      <div style="margin-top:20px;">
+        <button id="backToLoginBtn" type="button" style="background:none; border:none; color:var(--text2); font-size:0.8rem; cursor:pointer; text-decoration:underline;">← Back to Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SET NEW PASSWORD (When arriving from recovery link #type=recovery) -->
+  <div id="newPasswordScreen" style="display:none;">
+    <div class="login-card">
+      <div class="login-icon">✨</div>
+      <div class="login-title">Set New Password</div>
+      <div class="login-sub">Enter your new administrator password.</div>
+      <label class="login-label">New Password</label>
+      <input class="login-input" type="password" id="newPasswordInput" placeholder="••••••••" />
+      <button class="btn-login" id="saveNewPasswordBtn" style="margin-top:14px;">Update Password →</button>
+      <div class="login-success" id="newPasswordSuccessMsg"></div>
+      <div class="login-error" id="newPasswordErrorMsg"></div>
     </div>
   </div>
 
