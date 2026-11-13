@@ -1,5 +1,5 @@
-﻿
-// â”€â”€ CONFIG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+// ── CONFIG ────────────────────────────────────────────────────
 const SUPABASE_URL     = 'https://owuzabcxptxqzeqgacwn.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93dXphYmN4cHR4cXplcWdhY3duIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTkyOTcsImV4cCI6MjA4ODk5NTI5N30.eaL7WhYr9aP2fJdHHeTdTOp3w-zbt-1lMh8VmwlJ_60';
 const TABLE            = '/rest/v1/community_recipes';
@@ -88,13 +88,13 @@ document.getElementById('loginPassword').addEventListener('keydown', e => {
 // PWA Env Selector Change
 function handlePwaUrlChange() {
   _pwaBaseUrl = document.getElementById('pwaUrlSelect').value;
-  showToast(`ðŸ”— API switched to: ${_pwaBaseUrl}`);
+  showToast(`🔍— API switched to: ${_pwaBaseUrl}`);
   if (_activeTab === 'crm' && _token) {
     loadUsers();
   }
 }
 
-// â”€â”€ TAB SWITCHER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── TAB SWITCHER ──────────────────────────────────────────────
 function switchAdminTab(tabName) {
   _activeTab = tabName;
   document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
@@ -115,19 +115,19 @@ function switchAdminTab(tabName) {
   }
 }
 
-// â”€â”€ FETCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── FETCH ────────────────────────────────────────────────────
 async function loadRecipes() {
   const grid = document.getElementById('recipeGrid');
   if (_activeTab === 'cookbook') {
-    grid.innerHTML = '<div class="empty-state"><div class="loading-spinner"></div><p>Loading recipesâ€¦</p></div>';
+    grid.innerHTML = '<div class="empty-state"><div class="loading-spinner"></div><p>Loading recipes...</p></div>';
   }
 
   try {
     const res = await fetch(
-      `${SUPABASE_URL}${TABLE}?order=created_at.desc&limit=200`,
+      `${SUPABASE_URL}${TABLE}?order=submitted_at.desc&limit=200`,
       { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${_token}` } }
     );
-    if (res.status === 401) { showToast('Session expired â€” please sign in again'); logout(); return; }
+    if (res.status === 401) { showToast('Session expired — please sign in again'); logout(); return; }
     if (!res.ok) throw new Error('Fetch failed: ' + res.status);
     _allRecipes = await res.json();
     
@@ -140,12 +140,12 @@ async function loadRecipes() {
     if (_activeTab === 'blogs') renderBlogs();
   } catch (e) {
     if (_activeTab === 'cookbook') {
-      grid.innerHTML = `<div class="empty-state"><span class="empty-icon">âš ï¸</span><p>${e.message}</p></div>`;
+      grid.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️ </span><p>${e.message}</p></div>`;
     }
   }
 }
 
-// â”€â”€ STATS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── STATS ────────────────────────────────────────────────────
 function updateStats() {
   const total    = _cookbookRecipes.length;
   const pending  = _cookbookRecipes.filter(r => !r.approved && !r.rejected).length;
@@ -158,7 +158,7 @@ function updateStats() {
   document.getElementById('statRejected').textContent = rejected;
 }
 
-// â”€â”€ FILTER (COOKBOOK) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── FILTER (COOKBOOK) ─────────────────────────────────────────
 function setFilter(f, btn) {
   _filter = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -166,7 +166,7 @@ function setFilter(f, btn) {
   renderRecipes();
 }
 
-// â”€â”€ RENDER COOKBOOK RECIPES â”€â”€
+// ── RENDER COOKBOOK RECIPES ──
 function renderRecipes() {
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
   const grid  = document.getElementById('recipeGrid');
@@ -187,8 +187,8 @@ function renderRecipes() {
 
   if (filtered.length === 0) {
     grid.innerHTML = `<div class="empty-state">
-      <span class="empty-icon">${_filter === 'pending' ? 'ðŸŽ‰' : 'ðŸ“­'}</span>
-      <p>${_filter === 'pending' ? 'No pending recipes â€” all caught up!' : 'No recipes found.'}</p>
+      <span class="empty-icon">${_filter === 'pending' ? '🎉' : '📭'}</span>
+      <p>${_filter === 'pending' ? 'No pending recipes — all caught up!' : 'No recipes found.'}</p>
     </div>`;
     return;
   }
@@ -200,17 +200,17 @@ function renderRecipes() {
 function buildRecipeCard(r) {
   const status = r.approved ? 'approved' : (r.rejected ? 'rejected' : 'pending');
   const badgeClass = { approved: 'badge-approved', rejected: 'badge-rejected', pending: 'badge-pending' }[status];
-  const badgeLabel = { approved: 'âœ… Approved', rejected: 'âŒ Rejected', pending: 'â³ Pending' }[status];
+  const badgeLabel = { approved: '✓ Approved', rejected: '✕ Rejected', pending: '⏳ Pending' }[status];
 
-  const date = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'â€”';
+  const date = (r.submitted_at || r.created_at) ? new Date(r.submitted_at || r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
   const nutri = r.nutrition || {};
   const nutriHtml = (nutri.calories || nutri.protein) ? `
     <div class="card-nutrition">
       ${nutri.calories ? `<span class="nutr-item"><strong>${nutri.calories}</strong> kcal</span>` : ''}
-      ${nutri.protein  ? `<span class="nutr-item">ðŸ”µ <strong>${nutri.protein}g</strong> protein</span>` : ''}
-      ${nutri.carbs    ? `<span class="nutr-item">ðŸŸ¡ <strong>${nutri.carbs}g</strong> carbs</span>` : ''}
-      ${nutri.fat      ? `<span class="nutr-item">ðŸŸ  <strong>${nutri.fat}g</strong> fat</span>` : ''}
+      ${nutri.protein  ? `<span class="nutr-item">🔍µ <strong>${nutri.protein}g</strong> protein</span>` : ''}
+      ${nutri.carbs    ? `<span class="nutr-item">🟡 <strong>${nutri.carbs}g</strong> carbs</span>` : ''}
+      ${nutri.fat      ? `<span class="nutr-item">🟠 <strong>${nutri.fat}g</strong> fat</span>` : ''}
     </div>` : '';
 
   const ingredients = Array.isArray(r.ingredients) ? r.ingredients : [];
@@ -224,7 +224,7 @@ function buildRecipeCard(r) {
     <div class="card-img" id="img-${r.id}">
       ${r.image_url
         ? `<img src="${r.image_url}" alt="${r.title}" loading="lazy" />`
-        : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:2.5rem;">ðŸ½ï¸</div>`}
+        : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:2.5rem;">🍽️</div>`}
     </div>
     <div class="card-body">
       <div class="card-status-row">
@@ -232,13 +232,13 @@ function buildRecipeCard(r) {
         <span class="card-date">${date}</span>
       </div>
       <div class="card-title">${esc(r.title || 'Untitled')}</div>
-      <div class="card-cuisine">${esc(r.cuisine || 'â€”')}</div>
+      <div class="card-cuisine">${esc(r.cuisine || '—')}</div>
       ${nutriHtml}
 
       <div class="card-section">
         <button class="card-section-toggle" onclick="toggleSection(this)">
-          ðŸ“‹ Ingredients (${ingredients.length})
-          <span style="margin-left:auto;opacity:0.5;">â–¼</span>
+          📋 Ingredients (${ingredients.length})
+          <span style="margin-left:auto;opacity:0.5;">▼</span>
         </button>
         <div class="card-section-body">
           <ul>${ingredients.map(i => `<li>${esc(typeof i === 'string' ? i : JSON.stringify(i))}</li>`).join('')}</ul>
@@ -247,8 +247,8 @@ function buildRecipeCard(r) {
 
       <div class="card-section">
         <button class="card-section-toggle" onclick="toggleSection(this)">
-          ðŸ“ Instructions (${instructions.length} steps)
-          <span style="margin-left:auto;opacity:0.5;">â–¼</span>
+          📋  Instructions (${instructions.length} steps)
+          <span style="margin-left:auto;opacity:0.5;">▼</span>
         </button>
         <div class="card-section-body">
           <ol>${instructions.map(s => `<li>${esc(typeof s === 'string' ? s : JSON.stringify(s))}</li>`).join('')}</ol>
@@ -257,10 +257,10 @@ function buildRecipeCard(r) {
 
       <div class="card-actions">
         ${status !== 'approved'
-          ? `<button class="btn-approve" onclick="moderateRecipe('${r.id}', true)">âœ… Approve</button>` : ''}
+          ? `<button class="btn-approve" onclick="moderateRecipe('${r.id}', true)">✓ Approve</button>` : ''}
         ${status !== 'rejected'
-          ? `<button class="btn-reject" onclick="moderateRecipe('${r.id}', false)">âŒ Reject</button>` : ''}
-        <button class="btn-delete" onclick="deleteRecipe('${r.id}')" title="Delete permanently">ðŸ—‘</button>
+          ? `<button class="btn-reject" onclick="moderateRecipe('${r.id}', false)">✕ Reject</button>` : ''}
+        <button class="btn-delete" onclick="deleteRecipe('${r.id}')" title="Delete permanently">🗑️</button>
       </div>
     </div>`;
 
@@ -271,10 +271,10 @@ function toggleSection(btn) {
   const body = btn.nextElementSibling;
   body.classList.toggle('open');
   const arrow = btn.querySelector('span:last-child');
-  if (arrow) arrow.textContent = body.classList.contains('open') ? 'â–²' : 'â–¼';
+  if (arrow) arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
 }
 
-// â”€â”€ COOKBOOK MODERATION API CALLS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── COOKBOOK MODERATION API CALLS ─────────────────────────────
 async function moderateRecipe(id, approve) {
   // If approving, approved=true, rejected=false. If rejecting, approved=false, rejected=true.
   const payload = { approved: !!approve, rejected: !approve };
@@ -299,7 +299,7 @@ async function moderateRecipe(id, approve) {
 
     updateStats();
     renderRecipes();
-    showToast(approve ? 'âœ… Recipe approved and live!' : 'âŒ Recipe marked as rejected');
+    showToast(approve ? '✓ Recipe approved and live!' : '✕ Recipe marked as rejected');
   } catch (e) {
     showToast('Error: ' + e.message);
   }
@@ -322,13 +322,13 @@ async function deleteRecipe(id) {
     _allRecipes = _allRecipes.filter(r => r.id != id);
     updateStats();
     renderRecipes();
-    showToast('ðŸ—‘ Recipe deleted permanently');
+    showToast('🗑️ Recipe deleted permanently');
   } catch (e) {
     showToast('Error: ' + e.message);
   }
 }
 
-// â”€â”€ RENDER BLOGS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── RENDER BLOGS ──────────────────────────────────────────────
 function renderBlogs() {
   const tbody = document.getElementById('blogsTableBody');
   if (_blogPosts.length === 0) {
@@ -443,7 +443,7 @@ async function saveBlogPost() {
 
     if (!res.ok) throw new Error('Save failed: ' + res.status);
 
-    showToast(_editingBlogId ? 'âœï¸ Blog post updated successfully!' : 'âœï¸ Blog post published!');
+    showToast(_editingBlogId ? '✍️ Blog post updated successfully!' : '✍️ Blog post published!');
     resetBlogForm();
     await loadRecipes(); // Reload to refresh
   } catch (e) {
@@ -508,13 +508,13 @@ async function deleteBlogPost(id) {
     _blogPosts = _blogPosts.filter(b => b.id != id);
     _allRecipes = _allRecipes.filter(r => r.id != id);
     renderBlogs();
-    showToast('ðŸ—‘ Blog post deleted');
+    showToast('🗑️ Blog post deleted');
   } catch (e) {
     alert("Failed to delete blog post: " + e.message);
   }
 }
 
-// â”€â”€ USERS CRM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── USERS CRM ─────────────────────────────────────────────────
 async function loadUsers() {
   const tbody = document.getElementById('crmTableBody');
   tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;"><div class="loading-spinner"></div><p>Fetching users list...</p></td></tr>`;
@@ -527,7 +527,7 @@ async function loadUsers() {
     renderUsers();
   } catch (e) {
     console.error("Failed to load users:", e);
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--red);">âš ï¸ Error connecting to CRM API (${_pwaBaseUrl}): ${e.message}<br><small>Make sure the PWA is running and CORS headers are configured.</small></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--red);">⚠️  Error connecting to CRM API (${_pwaBaseUrl}): ${e.message}<br><small>Make sure the PWA is running and CORS headers are configured.</small></td></tr>`;
   }
 }
 
@@ -601,7 +601,7 @@ function renderUsers() {
       <td>
         <div style="display:flex; gap:6px; flex-wrap:wrap; max-width:240px;">
           <button class="btn btn-blue" style="padding: 5px 8px; font-size: 0.72rem;" onclick="nudgeUser('${user.email}')">Nudge</button>
-          <button class="btn" style="padding: 5px 8px; font-size: 0.72rem;" onclick="openProfileModal(${JSON.stringify(user).replace(/"/g, '&quot;')})">ðŸ‘ Profile</button>
+          <button class="btn" style="padding: 5px 8px; font-size: 0.72rem;" onclick="openProfileModal(${JSON.stringify(user).replace(/"/g, '&quot;')})">👤  Profile</button>
           <button class="btn btn-danger" style="padding: 5px 8px; font-size: 0.72rem;" onclick="deleteUser('${user.id}', '${user.email}')">Remove</button>
         </div>
       </td>
@@ -623,7 +623,7 @@ async function deleteUser(userId, email) {
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
-    showToast('ðŸ—‘ User deleted successfully');
+    showToast('🗑️ User deleted successfully');
     await loadUsers();
   } catch (e) {
     alert("Failed to delete user: " + e.message);
@@ -631,12 +631,12 @@ async function deleteUser(userId, email) {
 }
 
 function nudgeUser(email) {
-  const subject = encodeURIComponent("Your Magic Kitchen is Waiting! ðŸ§žâ€â™‚ï¸");
-  const body = encodeURIComponent(`Hey there!\n\nI noticed you had the Genie generate some magical recipes recently, but haven't had a chance to cook them yet!\n\nMeal Genie Pro is designed to make your life easier and healthier. The next time you're wondering what's for dinner, just open the app and let the Genie handle it.\n\nReady to get cooking?\nðŸ‘‰ ${_pwaBaseUrl}\n\nStay magical,\nThe Meal Genie Team`);
+  const subject = encodeURIComponent("Your Magic Kitchen is Waiting! 🧞‍♂️");
+  const body = encodeURIComponent(`Hey there!\n\nI noticed you had the Genie generate some magical recipes recently, but haven't had a chance to cook them yet!\n\nMeal Genie Pro is designed to make your life easier and healthier. The next time you're wondering what's for dinner, just open the app and let the Genie handle it.\n\nReady to get cooking?\n👉 ${_pwaBaseUrl}\n\nStay magical,\nThe Meal Genie Team`);
   window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
 }
 
-// â”€â”€ DIET DIVERSITY SCORE (DDS) UTILS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── DIET DIVERSITY SCORE (DDS) UTILS ──────────────────────────
 function calculateUserDDS(cookedHistory) {
   const uniqueProteins = new Set();
   const uniqueVegetables = new Set();
@@ -697,14 +697,14 @@ function calculateUserDDS(cookedHistory) {
   };
 }
 
-// â”€â”€ CRM MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── CRM MODAL ──────────────────────────────────────────────────
 function openProfileModal(user) {
   const modal = document.getElementById('profileModal');
   document.getElementById('modalUserEmail').textContent = user.email;
   
   // Plan badge
   const planEl = document.getElementById('modalPlanBadge');
-  planEl.textContent = user.is_premium ? "â™› PRO" : "FREE";
+  planEl.textContent = user.is_premium ? "♛ PRO" : "FREE";
   planEl.style.color = user.is_premium ? "var(--amber)" : "var(--text)";
 
   // Stats
@@ -760,7 +760,7 @@ function openProfileModal(user) {
         <li style="padding: 8px 12px; border-radius: 6px; background:rgba(255,255,255,0.02); border: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
           <div>
             <strong style="color:var(--text);">${esc(log.recipe_title || log.title || 'Unknown Meal')}</strong>
-            <div style="font-size:10px; color:var(--text3); margin-top:2px;">Type: ${esc(log.recipe_cuisine || log.cuisine || 'â€”')}</div>
+            <div style="font-size:10px; color:var(--text3); margin-top:2px;">Type: ${esc(log.recipe_cuisine || log.cuisine || '—')}</div>
           </div>
           <span style="font-size: 11px; color:var(--text2); font-family:'DM Mono',monospace;">${formattedDate.split(',')[0]}</span>
         </li>
@@ -782,11 +782,11 @@ window.addEventListener('click', (e) => {
   if (e.target === modal) closeProfileModal();
 });
 
-// â”€â”€ BACKUP DATABASE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── BACKUP DATABASE ───────────────────────────────────────────
 async function backupDatabase() {
   const btn = document.getElementById('backupBtn');
   const originalText = btn.textContent;
-  btn.textContent = "â³ Backing up...";
+  btn.textContent = "⏳ Backing up...";
   btn.disabled = true;
 
   try {
@@ -819,7 +819,7 @@ async function backupDatabase() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    showToast("ðŸŽ‰ Database backup downloaded successfully!");
+    showToast("🎉 Database backup downloaded successfully!");
   } catch (e) {
     alert("Failed to back up database: " + e.message);
   } finally {
@@ -828,7 +828,7 @@ async function backupDatabase() {
   }
 }
 
-// â”€â”€ TOAST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── TOAST ────────────────────────────────────────────────────
 let _toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -838,7 +838,7 @@ function showToast(msg) {
   _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// â”€â”€ UTIL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── UTIL ─────────────────────────────────────────────────────
 function esc(str) {
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')

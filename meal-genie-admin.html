@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meal Genie â€” Admin Portal</title>
+  <title>Meal Genie — Admin Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,7 +34,7 @@
       min-height: 100vh;
     }
 
-    /* â”€â”€ BG â”€â”€ */
+    /* ── BG ── */
     .bg-mesh {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
@@ -42,7 +42,7 @@
         radial-gradient(ellipse 50% 40% at 90% 20%, rgba(26,158,110,0.06) 0%, transparent 60%);
     }
 
-    /* â”€â”€ NAV â”€â”€ */
+    /* ── NAV ── */
     nav {
       position: sticky; top: 0; z-index: 100;
       background: rgba(11,24,41,0.9);
@@ -101,10 +101,10 @@
       box-shadow: 0 0 6px rgba(26,158,110,0.6);
     }
 
-    /* â”€â”€ LAYOUT â”€â”€ */
+    /* ── LAYOUT ── */
     .app { position: relative; z-index: 1; }
 
-    /* â”€â”€ BUTTONS â”€â”€ */
+    /* ── BUTTONS ── */
     .btn {
       background: var(--frost); border: 1px solid var(--border);
       color: var(--text2); font-family: 'DM Sans', sans-serif;
@@ -141,7 +141,7 @@
       background: rgba(59,130,246,0.25); color: white;
     }
 
-    /* â”€â”€ LOGIN SCREEN â”€â”€ */
+    /* ── LOGIN SCREEN ── */
     #loginScreen {
       display: flex; align-items: center; justify-content: center;
       min-height: calc(100vh - 70px); padding: 24px;
@@ -194,10 +194,10 @@
       min-height: 20px;
     }
 
-    /* â”€â”€ MAIN SCREEN â”€â”€ */
+    /* ── MAIN SCREEN ── */
     #mainScreen { display: none; padding: 32px 28px 80px; max-width: 1200px; margin: 0 auto; }
 
-    /* â”€â”€ TABS NAVIGATION â”€â”€ */
+    /* ── TABS NAVIGATION ── */
     .admin-tabs {
       display: flex; gap: 8px; margin-bottom: 32px;
       border-bottom: 1px solid var(--border); padding-bottom: 10px;
@@ -216,11 +216,11 @@
       font-weight: 700;
     }
 
-    /* â”€â”€ TAB PANES â”€â”€ */
+    /* ── TAB PANES ── */
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    /* â”€â”€ STATS â”€â”€ */
+    /* ── STATS ── */
     .stats-row {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 16px; margin-bottom: 32px;
@@ -235,7 +235,7 @@
     }
     .stat-label { font-size: 0.78rem; color: var(--text2); }
 
-    /* â”€â”€ FILTERS â”€â”€ */
+    /* ── FILTERS ── */
     .filter-row {
       display: flex; gap: 10px; flex-wrap: wrap;
       align-items: center; margin-bottom: 24px;
@@ -262,13 +262,13 @@
     .search-input:focus { border-color: var(--green); }
     .search-input::placeholder { color: var(--text3); }
 
-    /* â”€â”€ RECIPE GRID â”€â”€ */
+    /* ── RECIPE GRID ── */
     .recipe-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
 
-    /* â”€â”€ RECIPE CARD â”€â”€ */
+    /* ── RECIPE CARD ── */
     .recipe-card {
       background: var(--frost); backdrop-filter: blur(10px);
       border: 1px solid var(--border); border-radius: var(--radius);
@@ -341,7 +341,7 @@
     .btn-delete { background: rgba(239,68,68,0.08); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); flex: 0; padding: 9px 14px; }
     .btn-delete:hover { background: rgba(239,68,68,0.25); }
 
-    /* â”€â”€ BLOG POSTS MANAGEMENT â”€â”€ */
+    /* ── BLOG POSTS MANAGEMENT ── */
     .blog-form-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
     }
@@ -356,7 +356,7 @@
     .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--green); }
     .form-textarea { resize: vertical; }
 
-    /* â”€â”€ TABLES â”€â”€ */
+    /* ── TABLES ── */
     .table-wrap {
       width: 100%; overflow-x: auto; background: var(--frost); border: 1px solid var(--border);
       border-radius: var(--radius); margin-top: 20px;
@@ -376,13 +376,13 @@
     .badge-free { background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
     .badge-cat { background: rgba(26,158,110,0.1); color: #6ee7b7; border: 1px solid rgba(26,158,110,0.2); }
 
-    /* â”€â”€ PAGINATION â”€â”€ */
+    /* ── PAGINATION ── */
     .pagination {
       display: flex; justify-content: space-between; align-items: center;
       margin-top: 16px; padding: 8px 4px;
     }
 
-    /* â”€â”€ MODALS â”€â”€ */
+    /* ── MODALS ── */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(11,24,41,0.85);
       backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;
@@ -411,7 +411,7 @@
     .dds-bar-wrap { background: rgba(0,0,0,0.3); border-radius: 6px; height: 8px; width: 100%; overflow: hidden; margin-top: 4px; }
     .dds-bar-fill { background: var(--green); height: 100%; transition: width 0.3s; }
 
-    /* â”€â”€ EMPTY / LOADING â”€â”€ */
+    /* ── EMPTY / LOADING ── */
     .empty-state { text-align: center; padding: 60px 24px; color: var(--text3); grid-column: 1 / -1; }
     .empty-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
     .loading-spinner {
@@ -421,7 +421,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* â”€â”€ TOAST â”€â”€ */
+    /* ── TOAST ── */
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(16px);
       background: rgba(255,255,255,0.1); backdrop-filter: blur(20px);
@@ -442,7 +442,7 @@
     <div class="nav-inner">
       <div class="nav-left">
         <div class="nav-logo">
-          ðŸ½ï¸ Meal<span>Genie</span>
+          🍽️ Meal<span>Genie</span>
           <span class="nav-badge">ADMIN</span>
         </div>
       </div>
@@ -457,12 +457,12 @@
           </select>
         </div>
 
-        <button onclick="backupDatabase()" class="btn btn-orange" id="backupBtn" style="display:none;">ðŸ“¥ Backup Database</button>
+        <button onclick="backupDatabase()" class="btn btn-orange" id="backupBtn" style="display:none;">📥 Backup Database</button>
 
         <div class="nav-status" id="navStatus" style="display:none;">
           <div class="status-dot"></div>
           <span>Connected</span>
-          <span style="color:var(--border);">Â·</span>
+          <span style="color:var(--border);">·</span>
           <span id="adminEmail" style="font-family:'DM Mono',monospace;font-size:0.72rem;"></span>
           <button onclick="logout()" class="btn" style="padding: 4px 10px; font-size: 0.72rem;">Sign Out</button>
         </div>
@@ -473,14 +473,14 @@
   <!-- LOGIN -->
   <div id="loginScreen">
     <div class="login-card">
-      <div class="login-icon">ðŸ”</div>
+      <div class="login-icon">🔐</div>
       <div class="login-title">Admin Portal</div>
       <div class="login-sub">Sign in with your Supabase admin credentials to moderate content and manage users.</div>
       <label class="login-label">Email</label>
       <input class="login-input" type="email" id="loginEmail" placeholder="admin@innov8edge.com" />
       <label class="login-label">Password</label>
-      <input class="login-input" type="password" id="loginPassword" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
-      <button class="btn-login" id="loginBtn" onclick="doLogin()">Sign In â†’</button>
+      <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" />
+      <button class="btn-login" id="loginBtn" onclick="doLogin()">Sign In →</button>
       <div class="login-error" id="loginError"></div>
     </div>
   </div>
@@ -489,53 +489,53 @@
   <div id="mainScreen">
     <!-- Admin Tabs -->
     <div class="admin-tabs">
-      <button class="admin-tab active" id="tabBtnCookbook" onclick="switchAdminTab('cookbook')">ðŸ“– Cookbook Moderation</button>
-      <button class="admin-tab" id="tabBtnBlogs" onclick="switchAdminTab('blogs')">âœï¸ Blog Post Management</button>
-      <button class="admin-tab" id="tabBtnCrm" onclick="switchAdminTab('crm')">ðŸ‘¥ Users CRM</button>
+      <button class="admin-tab active" id="tabBtnCookbook" onclick="switchAdminTab('cookbook')">📖 Cookbook Moderation</button>
+      <button class="admin-tab" id="tabBtnBlogs" onclick="switchAdminTab('blogs')">✍️ Blog Post Management</button>
+      <button class="admin-tab" id="tabBtnCrm" onclick="switchAdminTab('crm')">👥 Users CRM</button>
     </div>
 
-    <!-- â”€â”€ TAB 1: COOKBOOK MODERATION â”€â”€ -->
+    <!-- ── TAB 1: COOKBOOK MODERATION ── -->
     <div id="tabCookbook" class="tab-pane active">
       <!-- Stats -->
       <div class="stats-row" id="statsRow">
         <div class="stat-card">
-          <div class="stat-num" id="statTotal">â€”</div>
+          <div class="stat-num" id="statTotal">—</div>
           <div class="stat-label">Total Submissions</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" style="color:var(--amber);" id="statPending">â€”</div>
+          <div class="stat-num" style="color:var(--amber);" id="statPending">—</div>
           <div class="stat-label">Pending Review</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" id="statApproved">â€”</div>
+          <div class="stat-num" id="statApproved">—</div>
           <div class="stat-label">Approved & Live</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num" style="color:var(--red);" id="statRejected">â€”</div>
+          <div class="stat-num" style="color:var(--red);" id="statRejected">—</div>
           <div class="stat-label">Rejected</div>
         </div>
       </div>
 
       <!-- Filters -->
       <div class="filter-row">
-        <button class="filter-btn active" onclick="setFilter('pending', this)">â³ Pending</button>
-        <button class="filter-btn" onclick="setFilter('approved', this)">âœ… Approved</button>
-        <button class="filter-btn red" onclick="setFilter('rejected', this)">âŒ Rejected</button>
+        <button class="filter-btn active" onclick="setFilter('pending', this)">⏳ Pending</button>
+        <button class="filter-btn" onclick="setFilter('approved', this)">✓ Approved</button>
+        <button class="filter-btn red" onclick="setFilter('rejected', this)">✕ Rejected</button>
         <button class="filter-btn" onclick="setFilter('all', this)">All</button>
-        <input class="search-input" id="searchInput" placeholder="ðŸ” Search cookbook by title or cuisineâ€¦" oninput="renderRecipes()" />
-        <button class="btn" onclick="loadRecipes()">â†» Refresh</button>
+        <input class="search-input" id="searchInput" placeholder="🔍 Search cookbook by title or cuisine..." oninput="renderRecipes()" />
+        <button class="btn" onclick="loadRecipes()">↻ Refresh</button>
       </div>
 
       <!-- Recipe grid -->
       <div class="recipe-grid" id="recipeGrid">
         <div class="empty-state">
           <div class="loading-spinner"></div>
-          <p>Loading recipesâ€¦</p>
+          <p>Loading recipes...</p>
         </div>
       </div>
     </div>
 
-    <!-- â”€â”€ TAB 2: BLOG POST MANAGEMENT â”€â”€ -->
+    <!-- ── TAB 2: BLOG POST MANAGEMENT ── -->
     <div id="tabBlogs" class="tab-pane">
       <div class="form-card">
         <h3 style="font-family:'Syne',sans-serif; margin-bottom: 16px;" id="blogFormTitle">Publish New Blog Post</h3>
@@ -605,7 +605,7 @@
       </div>
     </div>
 
-    <!-- â”€â”€ TAB 3: USERS CRM â”€â”€ -->
+    <!-- ── TAB 3: USERS CRM ── -->
     <div id="tabCrm" class="tab-pane">
       <h3 style="font-family:'Syne',sans-serif; margin-bottom: 12px;" id="crmTitle">Registered Users Directory</h3>
       
@@ -638,7 +638,7 @@
   </div>
 </div>
 
-<!-- â”€â”€ USER PROFILE DETAIL MODAL â”€â”€ -->
+<!-- ── USER PROFILE DETAIL MODAL ── -->
 <div id="profileModal" class="modal-overlay" style="display:none;">
   <div class="modal-card">
     <div class="modal-header">
@@ -646,7 +646,7 @@
         <h2 class="modal-title">User Diet Profile & History</h2>
         <p id="modalUserEmail" style="font-size: 0.8rem; color: var(--text2); margin-top: 4px;"></p>
       </div>
-      <button class="modal-close" onclick="closeProfileModal()">âœ•</button>
+      <button class="modal-close" onclick="closeProfileModal()">✕</button>
     </div>
     
     <div class="modal-body">
@@ -669,7 +669,7 @@
       <!-- DDS Panel -->
       <div style="padding: 16px 20px; border-radius: 12px; background: rgba(26, 158, 110, 0.04); border: 1px solid rgba(26, 158, 110, 0.15);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-          <h4 style="font-family:'Syne',sans-serif; font-size: 0.95rem; color:#6ee7b7; display:flex; align-items:center; gap:8px;">ðŸ¥— Weekly Diet Diversity Score (DDS)</h4>
+          <h4 style="font-family:'Syne',sans-serif; font-size: 0.95rem; color:#6ee7b7; display:flex; align-items:center; gap:8px;">🥗 Weekly Diet Diversity Score (DDS)</h4>
           <span id="modalDdsLabel" style="font-size: 1.1rem; font-weight:800; color:#6ee7b7;">0% DDS</span>
         </div>
         <p style="font-size: 0.78rem; color: var(--text2); margin-bottom: 12px;">Based on unique healthy food groups logged during the last 7 days. Targets a max score of 14 unique items.</p>
@@ -679,19 +679,19 @@
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; font-size:0.8rem;">
           <div>
-            <strong style="color:var(--text); display:block; margin-bottom:4px;">ðŸ¥© Proteins (<span id="countProteins">0</span>)</strong>
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🥩 Proteins (<span id="countProteins">0</span>)</strong>
             <span id="listProteins" style="color:var(--text2); line-height: 1.4;">None logged</span>
           </div>
           <div>
-            <strong style="color:var(--text); display:block; margin-bottom:4px;">ðŸ¥¦ Vegetables (<span id="countVegetables">0</span>)</strong>
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🥦 Vegetables (<span id="countVegetables">0</span>)</strong>
             <span id="listVegetables" style="color:var(--text2); line-height: 1.4;">None logged</span>
           </div>
           <div style="margin-top:8px;">
-            <strong style="color:var(--text); display:block; margin-bottom:4px;">ðŸŒ¾ Grains (<span id="countGrains">0</span>)</strong>
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🌾 Grains (<span id="countGrains">0</span>)</strong>
             <span id="listGrains" style="color:var(--text2); line-height: 1.4;">None logged</span>
           </div>
           <div style="margin-top:8px;">
-            <strong style="color:var(--text); display:block; margin-bottom:4px;">ðŸ¥‘ Healthy Fats (<span id="countFats">0</span>)</strong>
+            <strong style="color:var(--text); display:block; margin-bottom:4px;">🥑 Healthy Fats (<span id="countFats">0</span>)</strong>
             <span id="listFats" style="color:var(--text2); line-height: 1.4;">None logged</span>
           </div>
         </div>
@@ -699,7 +699,7 @@
 
       <!-- CRM History list -->
       <div>
-        <h4 style="font-family:'Syne',sans-serif; font-size:0.95rem; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:6px;">ðŸ³ Cooking Task Log (Last 10 entries)</h4>
+        <h4 style="font-family:'Syne',sans-serif; font-size:0.95rem; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:6px;">🍳 Cooking Task Log (Last 10 entries)</h4>
         <div style="max-height: 200px; overflow-y:auto; font-size: 0.85rem;" id="modalCookingLog">
           <p style="color:var(--text3); text-align:center; padding:12px;">No activity logged yet.</p>
         </div>
